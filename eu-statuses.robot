@@ -7,10 +7,10 @@ Library  OperatingSystem
 
 *** Variables ***
 ${Base_URL}  https://www.autobazar.eu/
-@{Dealer_Pages}  /predajcovia-aut/  /vysledky-nove-auta/
+@{Dealer_Pages}  /predajcovia-aut/  /vysledky-nove-auta/  /vysledky-na-dovoz/
 
 *** Test Cases ***
-Open Browser And Check Status
+Open Browser And Check Statuses
     [Documentation]  Tento test otvorí prehliadač, načíta stránku a overí HTTP status kód.
     Create Session  autobazar  ${Base_URL}
     ${response}  GET On Session  autobazar  /
@@ -18,7 +18,6 @@ Open Browser And Check Status
     Should Be Equal As Numbers  ${response.status_code}  200
     Open Browser  ${Base_URL}  chrome
     Maximize Browser Window
-    Run Keyword And Continue On Failure  Wait Until Page Contains Element  //iframe  2s
     Switch To Frame And Accept All
     Unselect Frame
     FOR  ${page}  IN  @{Dealer_Pages}
@@ -32,6 +31,7 @@ Open Browser And Check Status
 *** Keywords ***
 
 Switch To Frame And Accept All
+    Wait Until Page Contains Element  //iframe[@title='SP Consent Message']
     Select Frame    //iframe[@title='SP Consent Message']
     Click Element    //button[@title='Prijať všetko']
     Unselect Frame

@@ -28,6 +28,7 @@ Open Browser And Check Statuses
     END
     [Teardown]  Close Browser
 
+
 *** Keywords ***
 
 Switch To Frame And Accept All

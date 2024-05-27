@@ -7,7 +7,7 @@ Library  OperatingSystem
 
 *** Variables ***
 ${Base_URL}  https://www.autobazar.eu/
-@{Dealer_Pages}  /predajcovia-aut/  /vysledky-nove-auta/  /vysledky-na-dovoz/
+@{Dealer_Pages}  /predajcovia-aut/  /vysledky-nove-auta/  /vysledky-na-dovoz/  /vysledky-najnovsie/  /ceny-aut/  /komplexne-preverenie-vozidla  /komplexne-preverenie-vozidla/cennik  /komplexne-preverenie-vozidla/kontakty  /overenie-vozidla
 
 *** Test Cases ***
 Open Browser And Check Statuses

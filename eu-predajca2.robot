@@ -16,9 +16,8 @@ Check All Links On Predajcovia Aut Page
     Scroll Down And Click Show Button
     ${links}    Get All Links On Page
     FOR    ${link}    IN    @{links}
-        ${response}    Get Request    ${link}
-        Log    HTTP status kód pre ${link} je: ${response.status_code}
-        Should Be Equal As Numbers    ${response.status_code}    200
+        ${is_http}    Run Keyword And Return Status    Should Start With    ${link}    http
+        Run Keyword If    ${is_http}    Check Link    ${link}
     END
 
 *** Keywords ***
@@ -45,24 +44,23 @@ Click And Search For Impa Ziar Nad Hronom
     Sleep    1s
 
 Scroll Down And Click Show Button
-    Execute JavaScript    window.scrollBy(0, 400)
+    Execute JavaScript    window.scrollBy(0, 500)
     Wait Until Element Is Visible    xpath=//button[contains(., 'Zobraziť')]    10s
     Wait Until Element Is Enabled    xpath=//button[contains(., 'Zobraziť')]    10s
     Click Button    xpath=//button[contains(., 'Zobraziť')]
     Sleep    2s
-    Execute JavaScript    window.scrollBy(0, 400)
+    Execute JavaScript    window.scrollBy(0, 500)
+    Sleep    2s
+    Wait Until Element Is Visible    xpath=//h3[contains(., 'IMPA Žiar nad Hronom s.r.o.')]    10s
+    Click Element    xpath=//h3[contains(., 'IMPA Žiar nad Hronom s.r.o.')]/a
     Sleep    2s
 
 Get All Links On Page
-    ${elements}    Get WebElements    //a[@href]
-    ${links}    Create List
-    FOR    ${el}    IN    @{elements}
-        ${href}    Get Element Attribute    ${el}    href
-        Append To List    ${links}    ${href}
-    END
+    ${links}    SeleniumLibrary.Get All Links
     [Return]    ${links}
 
-Get Request
+Check Link
     [Arguments]    ${url}
-    ${response}    Get    ${url}
-    [Return]    ${response}
+    ${response}    GET On Session    ${url}
+    Log    HTTP status kód pre ${url} je: ${response.status_code}
+    Should Be Equal As Numbers    ${response.status_code}    200

@@ -57,10 +57,26 @@ Scroll Down And Click Show Button
 
 Get All Links On Page
     ${links}    SeleniumLibrary.Get All Links
-    [Return]    ${links}
+    [RETURN]    ${links}
 
 Check Link
     [Arguments]    ${url}
     ${response}    GET On Session    ${url}
     Log    HTTP status kód pre ${url} je: ${response.status_code}
     Should Be Equal As Numbers    ${response.status_code}    200
+
+Check Current URL And HTTP Status Code
+    [Documentation]    Test overuje, či sa nachádzate na URL "https://www.autobazar.eu/predajca/impaziar/" a či server vracia HTTP status kód 200.
+    ${current_url}    Get Current Url
+    Should Be Equal    ${current_url}    https://www.autobazar.eu/predajca/impaziar/
+    Sleep    5s
+    Execute JavaScript    window.scrollBy(0, 500)
+    Sleep    5s
+
+Click First Element In Section
+    Wait Until Element Is Visible    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]    10s
+    Wait Until Element Is Enabled    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]    10s
+    Click Element    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]
+    Sleep    2s
+    Execute JavaScript    window.scrollBy(0, 500)
+    Sleep    5s

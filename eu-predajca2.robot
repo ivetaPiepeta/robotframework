@@ -19,6 +19,8 @@ Check All Links On Predajcovia Aut Page
         ${is_http}    Run Keyword And Return Status    Should Start With    ${link}    http
         Run Keyword If    ${is_http}    Check Link    ${link}
     END
+    Check Current URL And HTTP Status Code
+    Click First Element In Section
 
 *** Keywords ***
 Open Browser To Predajcovia Aut
@@ -61,7 +63,7 @@ Get All Links On Page
 
 Check Link
     [Arguments]    ${url}
-    ${response}    GET On Session    ${url}
+    ${response}    Get Request    ${url}
     Log    HTTP status kód pre ${url} je: ${response.status_code}
     Should Be Equal As Numbers    ${response.status_code}    200
 
@@ -70,14 +72,13 @@ Check Current URL And HTTP Status Code
     ${current_url}    Get Location
     Should Be Equal    ${current_url}    https://www.autobazar.eu/predajca/impaziar/
     Sleep    5s
-    Execute JavaScript    window.scrollBy(0, 1000)
-    Sleep    5s
 
 Click First Element In Section
     [Documentation]    Skroluje dolu a klikne na prvý element v sekcii inzerátov predajcu.
+    Execute JavaScript    window.scrollBy(0, 1000)
+    Sleep    5s
     ${first_element_url}    Get Element Attribute    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]    href
     Wait Until Element Is Visible    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]    10s
     Wait Until Element Is Enabled    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]    10s
     Click Element    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]
     Sleep    5s
-

@@ -23,6 +23,12 @@ Check All Links On Predajcovia Aut Page
     Click First Element In Section
     ${first_element_url}    Get First Element URL
     Run Keyword If    '${first_element_url}' != 'None'    Verify New Tab URL    ${first_element_url}
+    Switch To Original Tab
+    Go To Next Page If Exists
+    Click First Element In Section
+    ${first_element_url}    Get First Element URL
+    Run Keyword If    '${first_element_url}' != 'None'    Verify New Tab URL    ${first_element_url}
+
 
 
 *** Keywords ***
@@ -95,3 +101,19 @@ Verify New Tab URL
     [Arguments]    ${expected_url}
    Run Keyword If    '${expected_url}' != 'None'    Log    Aktuálna URL v novom tabe je: ${new_url}
    Run Keyword If    '${expected_url}' != 'None'    Should Be Equal    ${new_url}
+   Sleep    10s
+
+Switch To Original Tab
+    [Documentation]    Prepne späť na pôvodný tab.
+    ${original_window}    Get Window Handles
+    Switch Window    ${original_window[0]}
+    Sleep    2s
+
+
+Go To Next Page If Exists
+    [Documentation]    Skroluje dolu a klikne na tlačidlo pre stránkovanie, ak existuje.
+    Execute JavaScript    window.scrollBy(0, 2000)
+    Sleep    5s
+    ${pagination_exists}    Run Keyword And Return Status    Element Should Be Visible    xpath=//a[contains(@href, '/predajca/') and contains(@href, '?page=2')]
+    Run Keyword If    ${pagination_exists}    Click Element    xpath=//a[contains(@href, '/predajca/') and contains(@href, '?page=2')]
+    Run Keyword If    ${pagination_exists}    Sleep    5s

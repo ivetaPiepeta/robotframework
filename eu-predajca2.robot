@@ -21,6 +21,9 @@ Check All Links On Predajcovia Aut Page
     END
     Check Current URL And HTTP Status Code
     Click First Element In Section
+    ${first_element_url}    Get First Element URL
+    Run Keyword If    '${first_element_url}' != 'None'    Verify New Tab URL    ${first_element_url}
+
 
 *** Keywords ***
 Open Browser To Predajcovia Aut
@@ -82,3 +85,13 @@ Click First Element In Section
     Wait Until Element Is Enabled    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]    10s
     Click Element    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]
     Sleep    5s
+
+Get First Element URL
+    [Documentation]    Získa URL prvého elementu v sekcii inzerátov predajcu.
+    ${first_element_url}    Get Element Attribute    xpath=//div[@class="mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-row"]/a[1]    href
+
+Verify New Tab URL
+    [Documentation]    Overuje URL v novom tabe.
+    [Arguments]    ${expected_url}
+   Run Keyword If    '${expected_url}' != 'None'    Log    Aktuálna URL v novom tabe je: ${new_url}
+   Run Keyword If    '${expected_url}' != 'None'    Should Be Equal    ${new_url}

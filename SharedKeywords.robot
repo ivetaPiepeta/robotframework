@@ -7,6 +7,8 @@ Library  OperatingSystem
 
 *** Variables ***
 ${Base_URL}  https://www.autobazar.eu/
+${URL_NA}  https://www.autobazar.eu/vysledky-nove-auta/
+${URL_dovoz}  https://www.autobazar.eu/vysledky-na-dovoz/
 
 *** Keywords ***
 Disable Insecure Request Warnings

@@ -16,7 +16,7 @@ ${Sub_URL}  predajcovia-aut/
 ${TOTAL_LINKS}  0
 ${REMAINING_LINKS}  0
 ${SLEEP_TIME}  2s
-@{Search_Terms}  Impa Žiar nad Hronom  Autodado    BB Auto
+@{Search_Terms}  Impa Žiar nad Hronom  Autodado    BB Auto    Galimex s r. o.    	Róbert    testfirma
 @{Paginator_Links}
 ${NEXT_BUTTON_XPATH}  //a[contains(@class, 'cursor-pointer') and contains(text(), 'Ďalší predajcovia')]
 ${PAGINATOR_WRAPPER_SELLER}  //div[@class="float-none mx-0 my-0"]

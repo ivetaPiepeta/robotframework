@@ -41,3 +41,29 @@ Clear List
     [Arguments]  @{list}
     [Documentation]  Vyprázdni daný zoznam.
     Set Variable  @{list}  @{EMPTY}
+
+Scroll Down To Load Content 1 time
+    Execute JavaScript    window.scrollBy(0, window.innerHeight)
+    Sleep    1s
+
+
+Scroll Down To Load Content 2 times
+    FOR    ${i}    IN RANGE    2
+        Execute JavaScript    window.scrollBy(0, window.innerHeight)
+        Sleep    1s
+    END
+
+Click Element Using JavaScript
+    [Arguments]  ${xpath}
+    Execute JavaScript  document.evaluate("${xpath}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click()
+    Sleep  1s
+
+Select Option From Dropdown By Index
+    [Arguments]    ${dropdown_locator}    ${index}
+    Select From List By Index    ${dropdown_locator}    ${index}
+    Wait Until Loader Disappears And Click Button  //button[contains(., 'Zobraziť')]
+
+Select Option From Dropdown By Value
+    [Arguments]    ${dropdown_locator}    ${value}
+    Select From List By Value    ${dropdown_locator}    ${value}
+    Wait Until Loader Disappears And Click Button  //button[contains(., 'Zobraziť')]

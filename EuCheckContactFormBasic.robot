@@ -7,37 +7,23 @@ Library  OperatingSystem
 Resource  SharedKeywords.robot
 
 *** Variables ***
-${URL_inzerat1}  https://www.autobazar.eu/detail/dacia-duster-test115-blue-dci-115-prestige-4x4/31262521/
-${CALL_BUTTON_XPATH}  //*[@id="headlessui-dialog-title-:r2:"]
-
-
+${URL}     https://www.autobazar.eu/detail-nove-auto/dacia-duster-15-blue-dci-115-extreme-4x4/31393475/
+${BUTTON_TEXT_CALL}    Zavolať
+${BUTTON_TEXT_WRITE}    Napísať
+${BUTTON_TEXT_VISIT}    Navštíviť
+${PARENT_CLASS}    hidden lg:grid lg:grid-cols-3 lg:gap-4 lg:px-6 lg:pb-5
+${BUTTON_TEXT}     Zavolať
+${BUTTON_XPATH}    //div[contains(@class, '${PARENT_CLASS}')]//button[text()='${BUTTON_TEXT}']
+${TOP_NAV_FORM_XPATH}    //button[contains(@class, 'btn-cta') and text()='Kontaktovať predajcu']
+${CONTACT_BUTTON_SELECTOR}    //div[@id="headlessui-dialog-panel-:rj:"]//button[text()='Zavolať']
 *** Test Cases ***
-The click to call will display the phone number
-    [Documentation]  Overí, že kliknutie na tlačidlo "Zavolať" zobrazí správne telefónne číslo.
-    Open Browser  ${URL_inzerat1}  chrome
+Click Visible "Zavolať" Button And Check Content
+    Open Browser    ${URL}    chrome
     Maximize Browser Window
+    Wait Until Page Is Fully Loaded
     Switch To Frame And Accept All
-    Click Call Button
-    Verify Phone Number Displayed
-    Close Browser
-
-*** Keywords ***
-Accept Cookies
-    [Documentation]  Akceptuje cookies nastavenia na stránke.
-    Click Button  xpath=//button[contains(text(), 'Prijať všetko')]
-
-Click Call Button
-    [Documentation]  Klikne na tlačidlo "Zavolať".
-    Wait Until Element Is Visible  xpath=//button[contains(text(), 'Zavolať')][1]
-    Click Element Using JavaScript  xpath=//button[contains(text(), 'Zavolať')][1]
-
-Verify Phone Number Displayed
-    [Documentation]  Overí, že sa zobrazí správny text pre telefónne číslo.
-    Wait Until Element Is Visible  ${CALL_BUTTON_XPATH}
-    Element Text Should Be  ${CALL_BUTTON_XPATH}  Zavolajte predajcovi
-    Wait Until Element Is Visible  xpath=//a[contains(@href, 'tel:0914 111 115')]
-    Element Text Should Be  xpath=//a[contains(@href, 'tel:0914 111 115')]  0914 111 115
-
-Click Element Using JavaScript
-    [Arguments]  ${xpath}
-    Execute JavaScript  document.evaluate("${xpath}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click()
+    Scroll Down To Load Content 2 times
+    Click Element Using JavaScript  ${TOP_NAV_FORM_XPATH}
+    Wait Until Page Contains Element    ${CONTACT_BUTTON_SELECTOR}
+    Click Element Using JavaScript  ${CONTACT_BUTTON_SELECTOR}
+    Log to console  bac

@@ -46,6 +46,7 @@ Seller Links Check
     Disable Insecure Request Warnings
     FOR  ${url}  IN  @{Valid_Links}
         Open Valid Link And Check Inner Links  ${url}
+        Check Video In Listing
     END
     Navigate ThroughPages Until Last Span
     [Teardown]  Close Browser
@@ -192,3 +193,15 @@ Click Checkbox
     [Arguments]    ${checkbox_id}
     ${xpath}=    Set Variable    //input[contains(@id, '${checkbox_id}')]
     Execute JavaScript    var element = document.evaluate("${xpath}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; element.click();
+
+Check Video In Listing
+    [Documentation]  Overí, že video v inzeráte funguje.
+    ${video_span}=  Get WebElements  //span[contains(text(), 'Video')]
+    Run Keyword If  ${len(${video_span})} > 0  Click Element  ${video_span[0]}
+    Sleep  ${SLEEP_TIME}
+    ${video_url}=  Get Location
+    ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${video_url}
+    ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+    Log To Console  status kód linku ${video_url} je ${status_code}
+    Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${video_url}
+    Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${video_url}  ${status_code}

@@ -65,7 +65,7 @@ CheckHrefsStatus
         ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
         Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${page}  ${status_code}
         ${REMAINING_LINKS}=  Evaluate  ${REMAINING_LINKS} - 1
-        Log To Console  ${REMAINING_LINKS}/${TOTAL_LINKS}  no new line=True
+        Log To Console  ${REMAINING_LINKS}/${TOTAL_LINKS} ${page}  no new line=True
     END
     Set Variable  @{All_links}  @{EMPTY}
 
@@ -80,6 +80,11 @@ Log Broken Link
     [Arguments]  ${url}  ${status_code}
     Log  Broken link found: ${url} with status code: ${status_code}
     Append To List  ${Broken_Links}  ${url}
+
+Log Valid Link
+    [Arguments]  ${url}
+    Log  Valid link found: ${url} with status code: ${status_code}
+    Append To List  ${Valid_Links}  ${url}
 
 Fail Test If Broken Links Exist
     Run Keyword If  ${Broken_Links}  Fail  Broken links found: ${Broken_Links}

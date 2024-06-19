@@ -13,9 +13,11 @@ ${BUTTON_TEXT_WRITE}  Napísať
 ${BUTTON_TEXT_VISIT}  Navštíviť
 ${PARENT_CLASS}    mt-[16px] grid grid-cols-3 gap-4
 ${PHONE_NUMBER}    0914166639
-${BUTTON_XPATH}    //div[contains(@class, '${PARENT_CLASS}')]//button[text()='${BUTTON_TEXT_CALL}']
 ${TOP_NAV_FORM_XPATH}    //button[contains(@class, 'btn-cta') and text()='Kontaktovať predajcu']
 ${CONTACT_BUTTON_SELECTOR}    //button[contains(text()='${BUTTON_TEXT_CALL}')]
+${BUTTON_XPATH_CALL}     //div[contains(@class, '${PARENT_CLASS}')]//button[text()='${BUTTON_TEXT_CALL}']
+${BUTTON_XPATH_WRITE}    //div[contains(@class, '${PARENT_CLASS}')]//button[text()='${BUTTON_TEXT_WRITE}']
+${BUTTON_XPATH_VISIT}    //div[contains(@class, '${PARENT_CLASS}')]//button[text()='${BUTTON_TEXT_VISIT}']
 
 *** Test Cases ***
 Click All Buttons And Verify Content
@@ -29,9 +31,22 @@ Click All Buttons And Verify Content
     Log To Console  Click All Buttons And Verify Content2
     Scroll Down To Load Content 7 times
     Log To Console  Click All Buttons And Verify Content3
-    Verify All Buttons And Phone Number
-    Log To Console  Click All Buttons And Verify Content4
+
+    Wait Until Page Contains Element    ${BUTTON_XPATH_CALL}
+    Log To Console  Click All Buttons And Verify Content41
+    Click Element    ${BUTTON_XPATH_CALL}
+    Log To Console  Click All Buttons And Verify Content42
+    Check Phone Number
+    Log To Console  Click All Buttons And Verify Content43
+    Wait Until Page Contains Element    ${BUTTON_XPATH_WRITE}
+    Log To Console  Click All Buttons And Verify Content44
+    Click Element    ${BUTTON_XPATH_WRITE}
+    Log To Console  Click All Buttons And Verify Content45
+    Wait Until Page Contains Element    ${BUTTON_XPATH_VISIT}
+    Log To Console  Click All Buttons And Verify Content46
+    Click Element    ${BUTTON_XPATH_VISIT}
     Log To Console  Test case completed: Click All Buttons And Verify Content
+
 
 *** Keywords ***
 
@@ -43,10 +58,10 @@ Click Element Using JavaScript
 
 Click Button And Verify Response
     [Arguments]  ${button_text}
-    Log To Console  Clicking button with text "${button_text}" and verifying response
+    Log To Console  Clicking button with text "${BUTTON_TEXT_CALL}" and verifying response
     ${button_xpath}=    Set Variable    //div[contains(@class, '${PARENT_CLASS}')]//button[text()='${BUTTON_TEXT_CALL}']
     Wait Until Element Is Visible    ${button_xpath}
-    Click Element Using JavaScript    ${button_xpath}
+    Click Element Using JavaScript    ${BUTTON_TEXT_CALL}
     ${url}=    Get Location
     Log To Console  Verifying response for URL: ${url}
     ${response}=    Request  GET  ${url}

@@ -9,6 +9,14 @@ Library  OperatingSystem
 ${Base_URL}  https://www.autobazar.eu/
 ${URL_NA}  https://www.autobazar.eu/vysledky-nove-auta/
 ${URL_dovoz}  https://www.autobazar.eu/vysledky-na-dovoz/
+${URL_najnovsie}  https://www.autobazar.eu/vysledky-najnovsie/
+${URL_sellers}  https://www.autobazar.eu/predajcovia-aut/
+${URL_forum}  https://forum.autobazar.eu/
+${URL_magazin}  https://magazin.autobazar.eu/
+${URL_documents}  https://www.autobazar.eu/dokumenty
+${URL_tests}  https://www.autobazar.eu/testy-aut/
+${URL_prices}  https://www.autobazar.eu/ceny-aut/
+
 
 *** Keywords ***
 Disable Insecure Request Warnings
@@ -49,6 +57,12 @@ Scroll Down To Load Content 1 time
 
 Scroll Down To Load Content 2 times
     FOR    ${i}    IN RANGE    2
+        Execute JavaScript    window.scrollBy(0, window.innerHeight)
+        Sleep    1s
+    END
+
+Scroll Down To Load Content 7 times
+    FOR    ${i}    IN RANGE    7
         Execute JavaScript    window.scrollBy(0, window.innerHeight)
         Sleep    1s
     END

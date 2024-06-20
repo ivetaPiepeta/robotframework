@@ -18,6 +18,7 @@ ${URL_documents}  https://www.autobazar.eu/dokumenty
 ${URL_tests}  https://www.autobazar.eu/testy-aut/
 ${URL_prices}  https://www.autobazar.eu/ceny-aut/
 
+${SLEEP_TIME}  2s
 ${USERNAME}   testsukromnik2
 ${PASSWORD}   Ringier01
 
@@ -85,3 +86,11 @@ Select Option From Dropdown By Value
     [Arguments]    ${dropdown_locator}    ${value}
     Select From List By Value    ${dropdown_locator}    ${value}
     Wait Until Loader Disappears And Click Button  //button[contains(., 'Zobraziť')]
+
+Wait Until Loader Disappears And Click Button
+    [Arguments]  ${xpath}
+    [Documentation]  Počká, kým zmizne loader (SVG prvok) a klikne na tlačidlo.
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  ${xpath}
+    Scroll Element Into View  ${xpath}
+    Click Element Using JavaScript  ${xpath}

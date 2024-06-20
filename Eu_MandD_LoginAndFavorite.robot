@@ -20,26 +20,27 @@ ${MOBILE_HEIGHT}  844
 *** Test Cases ***
 Login And Click On Favorites on Desktop
     [Documentation]  Tento test otvorí prehliadač, načíta stránku, zaloguje usera a pridá inzerát do obľúbených na desktope.
-    Run Test With Resolution
+    Run Test With Resolution    ${DESKTOP_WIDTH}    ${DESKTOP_HEIGHT}
+
+Login And Click On Favorites on Mobile
+    [Documentation]  Tento test otvorí prehliadač, načíta stránku, zaloguje usera a pridá inzerát do obľúbených na mobile.
+    Run Test With Resolution    ${MOBILE_WIDTH}    ${MOBILE_HEIGHT}
 
 *** Keywords ***
 
 Run Test With Resolution
-    [Documentation]  Tento test otvorí prehliadač, načíta stránku a overí HTTP status kód.
+    [Arguments]  ${width}  ${height}
     Disable Insecure Request Warnings
     Create Session  autobazar  ${Base_URL}  verify=False
     ${response}  GET On Session  autobazar  /
     Log  HTTP status kód je: ${response.status_code}
     Should Be Equal As Numbers  ${response.status_code}  200
     Open Browser  ${Base_URL}  chrome
-    Maximize Browser Window
+    Set Window Size  ${width}  ${height}
     Switch To Frame And Accept All
-    Log To Console  1
     Wait Until Page Is Fully Loaded
-    Log To Console  2
-
     Perform Login
-    Log To Console  3
+    Click To Favorites
 
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
@@ -106,13 +107,22 @@ Should Ignore Href
 Perform Login
     Wait Until Element Is Visible  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
     Click Element Using JavaScript  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
-    Log To Console  halo2
     Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
-    Log To Console  halo3
     Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
-    Log To Console  halo38
     Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
-    Log To Console  halo4
+    Sleep  1s
+
+Click To Favorites
+    Go To  ${Base_URL}
+    Wait Until Page Is Fully Loaded
+    Scroll Down To Load Content 1 time
+    Select Option From Dropdown By Index    //select[@name='userType']    2
+    Sleep  ${SLEEP_TIME}
+    Wait Until Page Is Fully Loaded
+    Sleep  1s
+    Scroll Down To Load Content 1 time
+    Wait Until Element Is Visible  //button[.//picture/img[@alt='parking'][1]]
+    Click Element Using JavaScript  //button[.//picture/img[@alt='parking'][1]]
 
 Click Element Using JavaScript 3
     [Arguments]  ${xpath}

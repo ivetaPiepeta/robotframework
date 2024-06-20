@@ -13,9 +13,13 @@ ${URL_najnovsie}  https://www.autobazar.eu/vysledky-najnovsie/
 ${URL_sellers}  https://www.autobazar.eu/predajcovia-aut/
 ${URL_forum}  https://forum.autobazar.eu/
 ${URL_magazin}  https://magazin.autobazar.eu/
+${URL_AProka}  https://www.autopredajcaroka.eu/
 ${URL_documents}  https://www.autobazar.eu/dokumenty
 ${URL_tests}  https://www.autobazar.eu/testy-aut/
 ${URL_prices}  https://www.autobazar.eu/ceny-aut/
+
+${USERNAME}   testsukromnik2
+${PASSWORD}   Ringier01
 
 
 *** Keywords ***

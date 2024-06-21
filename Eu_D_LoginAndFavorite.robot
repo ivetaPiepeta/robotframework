@@ -37,7 +37,6 @@ Run Test With Resolution
     Wait Until Page Is Fully Loaded
     Perform Login
     Click To Favorites
-
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
 
@@ -119,38 +118,3 @@ Click To Favorites
     Scroll Down To Load Content 1 time
     Wait Until Element Is Visible  //button[.//picture/img[@alt='parking'][1]]
     Click Element Using JavaScript  //button[.//picture/img[@alt='parking'][1]]
-
-Click Element Using JavaScript 3
-    [Arguments]  ${xpath}
-    Execute JavaScript  document.querySelector("${xpath}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click()
-    Sleep  1s
-
-Click Element Using XPath
-    [Arguments]  ${xpath}
-    Execute JavaScript
-        var element = document.evaluate(arguments[0], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        if (element) {
-            element.click();
-        } else {
-            throw new Error("Element not found with XPath: " + arguments[0]);
-        }
-    Sleep  1s
-
-Click Element Using JavaScript 2
-    [Arguments]  ${locator}
-    ${is_xpath}=  Should Start With  ${locator}  //
-    Run Keyword If  '${is_xpath}' == 'True'
-        Execute JavaScript  var element = document.evaluate("${locator}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; element.click();
-        ELSE  Execute JavaScript  document.querySelector("${locator}").click();
-    Sleep  1s
-
-Should Start With
-    [Arguments]  ${locator}  ${prefix}
-    ${result}=  Evaluate  ${{locator.startswith(prefix)}}
-    RETURN  ${result}
-
-
-Is Locator XPath
-    [Arguments]  ${locator}
-    ${result} =  Should Start With  ${locator}  //
-    RETURN  ${result}

@@ -17,6 +17,7 @@ ${URL_AProka}  https://www.autopredajcaroka.eu/
 ${URL_documents}  https://www.autobazar.eu/dokumenty
 ${URL_tests}  https://www.autobazar.eu/testy-aut/
 ${URL_prices}  https://www.autobazar.eu/ceny-aut/
+${URL_advertisiment}  https://www.autobazar.eu/detail/opel-grandland-x-12-turbo-ss-ultimate-a-t8/31449983/
 
 ${SLEEP_TIME}  2s
 ${USERNAME}   testsukromnik2

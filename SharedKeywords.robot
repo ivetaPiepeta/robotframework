@@ -22,7 +22,11 @@ ${URL_advertisiment}  https://www.autobazar.eu/detail/opel-grandland-x-12-turbo-
 ${SLEEP_TIME}  2s
 ${USERNAME}   testsukromnik2
 ${PASSWORD}   Ringier01
-
+${ECV_INPUT_NAME}     ecv_vozidla
+${ECV_INPUT_CLASS}    ecv-input
+@{ECV_LIST}           Z  A  5  7  5  J  L
+${BUTTON_NEXT_TEXT}   Ďalej
+${TYPING_DELAY}       0.5s
 
 *** Keywords ***
 Disable Insecure Request Warnings
@@ -38,6 +42,12 @@ Wait Until Page Is Fully Loaded
     Wait Until Page Contains Element  //footer
     Wait Until Page Contains Element  //main
     Wait Until Page Contains Element  //nav
+    ${ready_state}=  Execute JavaScript  return document.readyState
+    Wait Until Keyword Succeeds  1 min  1 sec  Execute JavaScript  return document.readyState == 'complete'
+
+Wait Until Page Is Fully Loaded Ecv Part
+    Wait Until Page Contains Element  //footer
+    Wait Until Page Contains Element  //main
     ${ready_state}=  Execute JavaScript  return document.readyState
     Wait Until Keyword Succeeds  1 min  1 sec  Execute JavaScript  return document.readyState == 'complete'
 

@@ -18,9 +18,6 @@ ${MOBILE_WIDTH}  390
 ${MOBILE_HEIGHT}  844
 
 *** Test Cases ***
-Login And Click On Favorites on Desktop
-    [Documentation]  Tento test otvorí prehliadač, načíta stránku, zaloguje usera a pridá inzerát do obľúbených na desktope.
-    Run Test With Resolution    ${DESKTOP_WIDTH}    ${DESKTOP_HEIGHT}
 
 Login And Click On Favorites on Mobile
     [Documentation]  Tento test otvorí prehliadač, načíta stránku, zaloguje usera a pridá inzerát do obľúbených na mobile.
@@ -39,9 +36,8 @@ Run Test With Resolution
     Set Window Size  ${width}  ${height}
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Perform Login
+    Perform Login Desktop
     Click To Favorites
-
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
 
@@ -103,14 +99,6 @@ Should Ignore Href
     [Arguments]  ${href}
     ${result}=  Run Keyword And Return Status  Should Contain Any  ${href}  @{Ignored_Patterns}
     RETURN  ${result}
-
-Perform Login
-    Wait Until Element Is Visible  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
-    Click Element Using JavaScript  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
-    Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
-    Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
-    Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
-    Sleep  1s
 
 Click To Favorites
     Go To  ${Base_URL}

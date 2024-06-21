@@ -95,3 +95,11 @@ Wait Until Loader Disappears And Click Button
     Wait Until Element Is Visible  ${xpath}
     Scroll Element Into View  ${xpath}
     Click Element Using JavaScript  ${xpath}
+
+Perform Login Desktop
+    Wait Until Element Is Visible  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
+    Click Element Using JavaScript  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
+    Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
+    Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
+    Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
+    Sleep  1s

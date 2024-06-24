@@ -22,6 +22,12 @@ ${ADD_AD_DIV_CLASS}  bg-icon
 ${XPATH_INPUT}  //input[@type='text' and @name='VIN' and @id='vindiv']
 ${KM}  10000
 ${PRICE}  30000
+${IMAGE_FILE}  /Users/vlckova.brindzova/PycharmProjects/robotframework/fotoDacia.jpeg
+${UPLOAD_BUTTON}  //button[@type='button' and contains(@class, 'form-action-link') and contains(@class, 'data-button-upload-photos') and contains(@class, 'dz-clickable') and text()='nahrajte']
+${UPLOAD_INPUT_XPATH}  //input[@type='file' and @name='foto']
+${CHECKBOX_XPATH}  //input[@type='checkbox' and @name='acceptterms' and @id='contact-advertising-conditions']
+${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
+
 
 *** Test Cases ***
 Login And Create A New Advertisiment
@@ -44,17 +50,14 @@ Run Test With Resolution
     Perform Login Desktop
     Add A New Advertisiment Desktop
     Add Ecv
-    Click Next Button Desktop
     Choose A Model Prestige
     Delete VIN
-    Click Next Button Desktop
-    Sleep  ${SLEEP_TIME}
-    Click Next Button Desktop
     Price Part
+
     Click Next Button Desktop
+    Confirm Checkbox Add Ad
 
-
-
+    Sleep  ${SLEEP_TIME}
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
 
@@ -133,6 +136,8 @@ Add Ecv
     Click Element Using JavaScript  //input[@name='${ECV_INPUT_NAME}' and contains(@class, '${ECV_INPUT_CLASS}')]
     Input Text Slowly  //input[@name='${ECV_INPUT_NAME}' and contains(@class, '${ECV_INPUT_CLASS}')]  ${ECV_LIST}
     Sleep  ${SLEEP_TIME}
+    Click Next Button Desktop
+    Sleep  ${SLEEP_TIME}
 
 Click Next Button Desktop
     Wait Until Page Is Fully Loaded Ecv Part
@@ -140,6 +145,15 @@ Click Next Button Desktop
     Wait Until Element Is Visible  //button[contains(text(),'${BUTTON_NEXT_TEXT}')]
     Click Element Using JavaScript  //button[contains(text(),'${BUTTON_NEXT_TEXT}')]
     Log To Console  Klikám Ďalej
+    Sleep  ${SLEEP_TIME}
+
+Click Button Add An Advertisement Desktop
+    Wait Until Page Is Fully Loaded Ecv Part
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}')]
+    Click Element Using JavaScript  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}')]
+    Log To Console  Klikám Pridať inzerát
+    Sleep  ${SLEEP_TIME}
 
 Input Text Slowly
     [Arguments]  ${locator}  @{text}
@@ -157,6 +171,8 @@ Choose A Model Prestige
     Sleep  ${TYPING_DELAY}
     Wait Until Element Is Visible  //div[@class='etax-bottom-bar']//a[contains(text(),'Vybrať a pokračovať')]  timeout=15
     Click Element Using JavaScript  //div[@class='etax-bottom-bar']//a[contains(text(),'Vybrať a pokračovať')]
+    Click Next Button Desktop
+    Sleep  ${SLEEP_TIME}
 
 Delete VIN
     Wait Until Page Is Fully Loaded Ecv Part
@@ -184,9 +200,10 @@ Clear Text In Input
 
 Price Part
     Wait Until Page Is Fully Loaded Ecv Part
+    Click Next Button Desktop
     Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/vybava
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/stav-vozidla
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/cena
+    Click Next Button Desktop
+    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/stav
     Wait Until Element Is Visible  //input[@type='number' and @name='price' and @id='normalPrice' and contains(@class, 'normalPrice')]
     Log To Console  vpisujem cenu
     Click Element Using JavaScript  //input[@type='number' and @name='price' and @id='normalPrice']
@@ -194,3 +211,35 @@ Price Part
     Input Text  //input[@type='number' and @name='price' and @id='normalPrice']  ${PRICE}
     Log To Console  vpisujem cenu
     Sleep  ${SLEEP_TIME}
+    Click Next Button Desktop
+    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/cena
+
+Upload Image
+    [Arguments]  ${image_path}
+    Wait Until Page Is Fully Loaded Ecv Part
+    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/media
+    Scroll Down To Load Content 1 time
+    Wait Until Element Is Visible  ${UPLOAD_BUTTON}
+    Click Element Using JavaScript  ${UPLOAD_BUTTON}
+    Wait Until Element Is Visible  ${UPLOAD_INPUT_XPATH}
+    Choose File  ${UPLOAD_INPUT_XPATH}  ${image_path}
+    Log To Console  Nahrávam súbor jpeg
+    Sleep  ${SLEEP_TIME}
+    Click Next Button Desktop
+
+Confirm Checkbox Add Ad
+    Wait Until Page Is Fully Loaded Ecv Part
+    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/kontakt
+    Scroll Down To Load Content 1 time
+    Wait Until Element Is Visible  ${CHECKBOX_XPATH}
+    Change Checkbox Value  ${CHECKBOX_XPATH}
+    Log To Console  Potvrdzujem súhlas klienta
+    Click Button Add An Advertisement Desktop
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Vytváram nový inzerát
+
+Change Checkbox Value
+    [Arguments]  ${locator}
+    Wait Until Element Is Visible  ${locator}
+    Execute JavaScript  document.evaluate("${locator}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.checked = true
+    Log To Console  Checkbox value changed to 1.

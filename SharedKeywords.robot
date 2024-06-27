@@ -28,8 +28,8 @@ ${ECV_INPUT_CLASS}    ecv-input
 ${BUTTON_NEXT_TEXT}   Ďalej
 ${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
 ${TYPING_DELAY}       0.5s
-${image_path}  /Users/vlckova.brindzova/PycharmProjects/robotframework/fotoDacia.jpeg
-${image_path2}  /Users/vlckova.brindzova/PycharmProjects/robotframework/adamotoo.jpeg
+${image_path}  /Users/vlckova.brindzova/PycharmProjects/robotframework/venv/Photos/fotoDacia.jpeg
+${image_path2}  /Users/vlckova.brindzova/PycharmProjects/robotframework/venv/Photos/adamotoo.jpeg
 ${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
 ${KM}  10000
 ${PRICE}  30000

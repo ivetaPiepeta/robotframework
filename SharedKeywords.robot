@@ -17,7 +17,7 @@ ${URL_AProka}  https://www.autopredajcaroka.eu/
 ${URL_documents}  https://www.autobazar.eu/dokumenty
 ${URL_tests}  https://www.autobazar.eu/testy-aut/
 ${URL_prices}  https://www.autobazar.eu/ceny-aut/
-${URL_advertisiment}  https://www.autobazar.eu/detail/opel-grandland-x-12-turbo-ss-ultimate-a-t8/31449983/
+${URL_advertisiment}  https://www.autobazar.eu/detail/mercedes-glc-kupe-220-d-4matic-a-t/31460018/
 
 ${SLEEP_TIME}  2s
 ${USERNAME}   testsukromnik2
@@ -26,8 +26,15 @@ ${ECV_INPUT_NAME}     ecv_vozidla
 ${ECV_INPUT_CLASS}    ecv-input
 @{ECV_LIST}           Z  A  5  7  5  J  L
 ${BUTTON_NEXT_TEXT}   Ďalej
+${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
 ${TYPING_DELAY}       0.5s
-
+${image_path}  /Users/vlckova.brindzova/PycharmProjects/robotframework/fotoDacia.jpeg
+${image_path2}  /Users/vlckova.brindzova/PycharmProjects/robotframework/adamotoo.jpeg
+${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
+${KM}  10000
+${PRICE}  30000
+${KM2}  10000
+${PRICE2}  2500
 *** Keywords ***
 Disable Insecure Request Warnings
     Evaluate  exec("import urllib3; urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)")
@@ -47,7 +54,7 @@ Wait Until Page Is Fully Loaded
 
 Wait Until Page Is Fully Loaded Ecv Part
     Wait Until Page Contains Element  //footer
-    Wait Until Page Contains Element  //main
+
     ${ready_state}=  Execute JavaScript  return document.readyState
     Wait Until Keyword Succeeds  1 min  1 sec  Execute JavaScript  return document.readyState == 'complete'
 
@@ -113,3 +120,4 @@ Perform Login Desktop
     Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
     Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
     Sleep  1s
+    Log To Console  Korektné prihlásenie do AB.EU

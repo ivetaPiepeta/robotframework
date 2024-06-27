@@ -22,13 +22,6 @@ ${ADD_AD_DIV_CLASS}  bg-icon
 ${XPATH_INPUT}  //input[@type='text' and @name='VIN' and @id='vindiv']
 ${KM}  10000
 ${PRICE}  30000
-${IMAGE_FILE}  /Users/vlckova.brindzova/PycharmProjects/robotframework/fotoDacia.jpeg
-${UPLOAD_BUTTON}  //button[@type='button' and contains(@class, 'form-action-link') and contains(@class, 'data-button-upload-photos') and contains(@class, 'dz-clickable') and text()='nahrajte']
-${image_path}  /Users/vlckova.brindzova/PycharmProjects/robotframework/fotoDacia.jpeg
-${UPLOAD_INPUT_XPATH}  //input[@type='file' and @name='fotoDacia']
-${CHECKBOX_XPATH}  //input[@type='checkbox' and @name='acceptterms' and @id='contact-advertising-conditions']
-${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
-
 
 *** Test Cases ***
 Login And Create A New Advertisiment
@@ -54,6 +47,7 @@ Run Test With Resolution
     Choose A Model Prestige
     Delete VIN
     Price Part
+    Upload An Image
     Click Next Button Desktop
     Confirm Checkbox Add Ad
     Check Adding Of Adv
@@ -213,20 +207,6 @@ Price Part
     Sleep  ${SLEEP_TIME}
     Click Next Button Desktop
     Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/cena
-
-Upload Image
-    [Arguments]  ${image_path}
-    Wait Until Page Is Fully Loaded Ecv Part
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/media
-    Scroll Down To Load Content 1 time
-    Wait Until Element Is Visible  ${UPLOAD_BUTTON}
-    Click Element Using JavaScript  ${UPLOAD_BUTTON}
-    Sleep  1s
-    Wait Until Element Is Visible  ${UPLOAD_INPUT_XPATH}
-    Choose File  ${UPLOAD_INPUT_XPATH}  ${image_path}
-    Log To Console  Nahrávam súbor jpeg
-    Sleep  ${SLEEP_TIME}
-    Click Next Button Desktop
 
 Upload An Image
     Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/media

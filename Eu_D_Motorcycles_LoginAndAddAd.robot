@@ -23,14 +23,9 @@ ${ADD_AD_DIV_CLASS}  bg-icon
 ${XPATH_INPUT}  //input[@type='text' and @name='VIN' and @id='vindiv']
 ${CAR_BRAND_SELECTOR}    //select[@name='CarBrandID']
 ${CAR_BRAND_OPTION}   Adamoto
-${KM}  10000
-${PRICE}  30000
-${IMAGE_FILE}  /Users/vlckova.brindzova/PycharmProjects/robotframework/fotoDacia.jpeg
 ${UPLOAD_BUTTON}  //button[@type='button' and contains(@class, 'form-action-link') and contains(@class, 'data-button-upload-photos') and contains(@class, 'dz-clickable') and text()='nahrajte']
-${image_path}  /Users/vlckova.brindzova/PycharmProjects/robotframework/fotoDacia.jpeg
 ${UPLOAD_INPUT_XPATH}  //input[@type='file' and @name='fotoDacia']
 ${CHECKBOX_XPATH}  //input[@type='checkbox' and @name='acceptterms' and @id='contact-advertising-conditions']
-${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
 ${ADD_AD_LINK}  //a[@href='/pridat-inzerat/motocykle/zakladne-udaje' and contains(@class, 'item')]
 
 
@@ -262,7 +257,7 @@ Price Part Motorcycle
     Wait Until Page Is Fully Loaded Ecv Part
     Log To Console  https://www.autobazar.eu/pridat-inzerat/motocykle/spresnenie
     Wait Until Element Is Visible  //input[@type='number' and @data-enable='drivenkm']
-    Input Text  //input[@type='number' and @data-enable='drivenkm']  ${KM}
+    Input Text  //input[@type='number' and @data-enable='drivenkm']  ${KM2}
     Click Next Button Desktop
     Log To Console  https://www.autobazar.eu/pridat-inzerat/motocykle/vybava
     Click Next Button Desktop
@@ -273,14 +268,14 @@ Price Part Motorcycle
     Log To Console  vpisujem cenu
     Click Element Using JavaScript  //input[@type='number' and @name='price' and @id='normalPrice']
     Log To Console  klik cena
-    Input Text  //input[@type='number' and @name='price' and @id='normalPrice']  ${PRICE}
+    Input Text  //input[@type='number' and @name='price' and @id='normalPrice']  ${PRICE2}
     Log To Console  vpisujem cenu
     Sleep  ${SLEEP_TIME}
     Click Next Button Desktop
     Log To Console  https://www.autobazar.eu/pridat-inzerat/motocykle/cena
 
 Upload Image
-    [Arguments]  ${image_path}
+    [Arguments]  ${image_path2}
     Wait Until Page Is Fully Loaded Ecv Part
     Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/media
     Scroll Down To Load Content 1 time
@@ -288,7 +283,7 @@ Upload Image
     Click Element Using JavaScript  ${UPLOAD_BUTTON}
     Sleep  1s
     Wait Until Element Is Visible  ${UPLOAD_INPUT_XPATH}
-    Choose File  ${UPLOAD_INPUT_XPATH}  ${image_path}
+    Choose File  ${UPLOAD_INPUT_XPATH}  ${image_path2}
     Log To Console  Nahrávam súbor jpeg
     Sleep  ${SLEEP_TIME}
     Click Next Button Desktop
@@ -298,7 +293,7 @@ Upload An Image
     # Kliknutie na tlačidlo "nahrajte" na zviditeľnenie input elementu
     Click Element Using JavaScript    xpath=//button[contains(@class, 'data-button-upload-photos')]
     # Výber a nahranie súboru
-    Choose File     xpath=//input[@type='file']    ${IMAGE_PATH}
+    Choose File     xpath=//input[@type='file']    ${image_path2}
     Sleep   ${SLEEP_TIME}
 
 Confirm Checkbox Add Ad

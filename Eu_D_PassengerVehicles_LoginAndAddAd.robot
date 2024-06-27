@@ -54,10 +54,9 @@ Run Test With Resolution
     Choose A Model Prestige
     Delete VIN
     Price Part
-
     Click Next Button Desktop
     Confirm Checkbox Add Ad
-
+    Check Adding Of Adv
     Sleep  ${SLEEP_TIME}
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
@@ -229,12 +228,20 @@ Upload Image
     Sleep  ${SLEEP_TIME}
     Click Next Button Desktop
 
+Upload An Image
+    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/media
+    # Kliknutie na tlačidlo "nahrajte" na zviditeľnenie input elementu
+    Click Element Using JavaScript    xpath=//button[contains(@class, 'data-button-upload-photos')]
+    # Výber a nahranie súboru
+    Choose File     xpath=//input[@type='file']    ${IMAGE_PATH}
+    Sleep   ${SLEEP_TIME}
+
+
 Confirm Checkbox Add Ad
     Wait Until Page Is Fully Loaded Ecv Part
     Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/kontakt
     Scroll Down To Load Content 1 time
-    Wait Until Element Is Visible  ${CHECKBOX_XPATH}
-    Change Checkbox Value  ${CHECKBOX_XPATH}
+    Click Element   id=contact-advertising-conditions
     Log To Console  Potvrdzujem súhlas klienta
     Click Button Add An Advertisement Desktop
     Sleep  ${SLEEP_TIME}
@@ -245,3 +252,9 @@ Change Checkbox Value
     Wait Until Element Is Visible  ${locator}
     Execute JavaScript  document.evaluate("${locator}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.checked = true
     Log To Console  Checkbox value changed to 1.
+
+Check Adding Of Adv
+    Wait Until Page Is Fully Loaded Ecv Part
+    ${header_text} =    Get Text    xpath=//*[@id="tasks2"]/center/h1    # Získa text z <h1> elementu vo vnútri #tasks2
+    Should Be Equal As Strings    ${header_text}    Váš inzerát ešte nie je zverejnený    # Porovná text s očakávaným textom
+    Log To Console  Overujem pridanie inzerátu

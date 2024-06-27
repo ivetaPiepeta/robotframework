@@ -57,9 +57,9 @@ Run Test With Resolution
     Add With No Ecv Desktop
     Choose A Model Starfinger
     Price Part Motorcycle
+    Upload An Image
     Click Next Button Desktop
     Confirm Checkbox Add Ad
-
     Check Adding Of Adv
 
     Sleep  ${SLEEP_TIME}
@@ -184,10 +184,9 @@ Click Button Add An Advertisement Desktop
 
 Check Adding Of Adv
     Wait Until Page Is Fully Loaded Ecv Part
+    ${header_text} =    Get Text    xpath=//*[@id="tasks2"]/center/h1    # Získa text z <h1> elementu vo vnútri #tasks2
+    Should Be Equal As Strings    ${header_text}    Váš inzerát ešte nie je zverejnený    # Porovná text s očakávaným textom
     Log To Console  Overujem pridanie inzerátu
-    Wait Until Element Is Visible  //div[contains(@class, 'advertisement') and text()='Váš inzerát bol úspešne pridaný!']
-    Element Should Be Visible  //div[contains(@class, 'advertisement') and text()='Váš inzerát bol úspešne pridaný!']
-    Log To Console  Overujem pridanie inzerátu2
 
 Input Text Slowly
     [Arguments]  ${locator}  @{text}
@@ -294,14 +293,21 @@ Upload Image
     Sleep  ${SLEEP_TIME}
     Click Next Button Desktop
 
+Upload An Image
+    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/media
+    # Kliknutie na tlačidlo "nahrajte" na zviditeľnenie input elementu
+    Click Element Using JavaScript    xpath=//button[contains(@class, 'data-button-upload-photos')]
+    # Výber a nahranie súboru
+    Choose File     xpath=//input[@type='file']    ${IMAGE_PATH}
+    Sleep   ${SLEEP_TIME}
+
 Confirm Checkbox Add Ad
     Wait Until Page Is Fully Loaded Ecv Part
     Log To Console  https://www.autobazar.eu/pridat-inzerat/.../kontakt
     Scroll Down To Load Content 1 time
-    Check Checkbox Status  ${CHECKBOX_XPATH}
-    Change Checkbox Value
+    Click Element   id=contact-advertising-conditions
     Log To Console  Potvrdzujem súhlas klienta
-    Ensure Button Add An Advertisement Is Clicked
+    Click Button Add An Advertisement Desktop
     Sleep  ${SLEEP_TIME}
     Log To Console  Vytváram nový inzerát
 
@@ -326,12 +332,3 @@ Check Checkbox Status
     Wait Until Element Is Visible  ${CHECKBOX_XPATH}
     ${is_selected}=    Get Element Attribute    ${CHECKBOX_XPATH}    checked
     Log To Console  Checkbox status: ${is_selected}
-
-Ensure Button Add An Advertisement Is Clicked
-    Wait Until Element Is Visible  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}')]
-    Log To Console  Kontrolujem, či je tlačidlo viditeľné
-    ${is_button_visible}=  Run Keyword And Return Status  Element Should Be Visible  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}')]
-    Log To Console  Stav viditeľnosti tlačidla: ${is_button_visible}
-    Run Keyword If  '${is_button_visible}'=='true'  Click Element Using JavaScript  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}')]
-    Log To Console  Klikám Pridať inzerát
-    Sleep  ${SLEEP_TIME}

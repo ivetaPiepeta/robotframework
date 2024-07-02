@@ -19,6 +19,9 @@ ${Search_Term}  ABS
 @{Paginator_Links}
 ${NEXT_BUTTON_XPATH}  //a[contains(@class, 'cursor-pointer') and contains(text(), 'Ďalší predajcovia')]
 ${PAGINATOR_WRAPPER_SELLER}  //div[@class="float-none mx-0 my-0"]
+${BUTTON_TEXT_SHOW}  //button[contains(., 'Zobraziť')]
+${TEXT_LOCATOR}  //div[@class='mr-[100px] font-semibold lowercase text-[rgba(235,235,245,.6)] xs:mr-1']
+
 
 *** Test Cases ***
 Seller check
@@ -176,14 +179,18 @@ Open Valid Link And Check Inner Links
 Using A Filter HP
     Wait Until Page Is Fully Loaded
     Log To Console  Začínam vyhľadávanie
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov bez filtra: ${button_text_show}
     Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
     Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
     Log To Console  Klikám na select
     Wait Until Element Is Visible  //div[@class='flex space-x-1']//button[picture/img[@alt='Škoda']]
     Click Element Using JavaScript  //div[@class='flex space-x-1']//button[picture/img[@alt='Škoda']]
     Log To Console  Vyberám značku Škoda
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov so značkou: ${button_text_show}
     Sleep  ${SLEEP_TIME}
-    Click Element Using JavaScript  //button[@class='h-10 rounded-full bg-[#0071e3] p-0 leading-[30px] text-white w-[70%]']//span[text()='Potvrdiť']
+    Click Element Using JavaScript  //button[.//span[text()='Potvrdiť']]
     Sleep  ${SLEEP_TIME}
     Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
     Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
@@ -193,17 +200,50 @@ Using A Filter HP
     Wait Until Element Is Visible  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
     Click Element Using JavaScript  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
     Log To Console  Vyberám model Octavia
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov s modelom: ${button_text_show}
     Sleep  ${SLEEP_TIME}
-    Click Element Using JavaScript  //button[@class='h-10 rounded-full bg-[#0071e3] p-0 leading-[30px] text-white w-[70%]']//span[text()='Potvrdiť']
+    Scroll Element Into View  //button[.//span[text()='Potvrdiť']]
+    Click Element Using JavaScript  //button[.//span[text()='Potvrdiť']]
     Sleep  ${SLEEP_TIME}
-
-
-    #//button[@id='headlessui-listbox-button-:R6q8lgmjsm:']//span[@class='block w-
-    #//*[@id="headlessui-listbox-button-:R6q8lgmjsm:"]/span[1]
-    Log To Console  skúšam
-    #Select From List By Value    ${dropdown_locator}    ${value}
-    #Select From List By Index    ${dropdown_locator}    ${index}
-    #index bol //select[@name='userType']    2
-    Input Search Term And Click Button  ${Search_Term}
-    #klucove slovo
     Log To Console  Končím vyhľadávanie a spúšťam výsledky
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Button text: ${button_text_show}
+    Scroll Element Into View  //select[@name='yearFrom']
+    Select Year From Dropdown  2020
+
+
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Button text: ${button_text_show}
+    Wait Until Loader Disappears And Click Button  //button[contains(., 'Zobraziť')]
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Button text: ${button_text_show}
+    Wait Until Page Is Fully Loaded
+    ${results_text}=    Get Text    //div[contains(@class, 'font-semibold') and contains(text(), 'inzerátov')]
+    Log To Console  Results text: ${results_text}
+    Compare Values    ${button_text_show}    ${results_text}
+    Wait For Element And Compare Values  ${BUTTON_LOCATOR}  ${TEXT_LOCATOR}
+
+Wait Until Loader Disappears And Click Buttonn
+    [Arguments]  ${locator}
+    Wait Until Element Is Not Visible  ${locator}  timeout=30s
+    Click Element Using JavaScript  ${locator}
+
+Select Year From Dropdown
+    [Arguments]  ${year}
+    ${option_value}=  Set Variable  od ${year}
+    Wait Until Element Is Visible  //select[@name='yearFrom']
+    Click Element Using JavaScript  //select[@name='yearFrom']
+    Select From List By Label  //select[@name='yearFrom']  ${option_value}
+
+Wait For Element And Compare Values
+    [Arguments]  ${button_locator}  ${text_locator}
+    [Documentation]  Počká, kým sa zobrazí element, a potom porovná jeho hodnotu s iným textovým elementom.
+    Wait Until Element Is Visible  ${button_locator}
+    ${button_text_show}=  Get Text  ${button_locator}
+    Wait Until Element Is Visible  ${text_locator}
+    ${results_text}=  Get Text  ${text_locator}
+    Should Be Equal As Numbers  ${button_text_show}  ${results_text}

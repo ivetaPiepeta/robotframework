@@ -181,39 +181,39 @@ Using A Filter HP
     Log To Console  Začínam vyhľadávanie
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov bez filtra: ${button_text_show}
-    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
-    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
-    Log To Console  Klikám na select
-    Wait Until Element Is Visible  //div[@class='flex space-x-1']//button[picture/img[@alt='Škoda']]
-    Click Element Using JavaScript  //div[@class='flex space-x-1']//button[picture/img[@alt='Škoda']]
-    Log To Console  Vyberám značku Škoda
-    Sleep  ${SLEEP_TIME}
+    Select Brand From Dropdown
     Click Element Using JavaScript  //button[.//span[text()='Potvrdiť']]
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov so značkou: ${button_text_show}
-    Sleep  ${SLEEP_TIME}
-    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
-    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
-    Log To Console  Klikám na select
-    Sleep  ${SLEEP_TIME}
-    Scroll Element Into View  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
-    Wait Until Element Is Visible  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
-    Click Element Using JavaScript  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
-    Log To Console  Vyberám model Octavia
-    Sleep  ${SLEEP_TIME}
-    Scroll Element Into View  //button[.//span[text()='Potvrdiť']]
+    Select Model From Dropdown
     Click Element Using JavaScript  //button[.//span[text()='Potvrdiť']]
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov s modelom: ${button_text_show}
     Sleep  ${SLEEP_TIME}
-    Log To Console  Končím vyhľadávanie a spúšťam výsledky
-    Sleep  ${SLEEP_TIME}
+    Scroll Element Into View  //button[.//span[text()='Potvrdiť']]
+    Click Element Using JavaScript  //button[.//span[text()='Potvrdiť']]
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov s modelomm: ${button_text_show}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Button text: ${button_text_show}
     Scroll Element Into View  //select[@name='yearFrom']
     Select Year From Dropdown  2020
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Button text: ${button_text_show}
+    Scroll Element Into View  //select[@name='priceFrom']
+    Select Price From Dropdown  7000
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Button text: ${button_text_show}
+    Scroll Element Into View  //select[@name='fuel']
+    Select Fuel From Dropdown  Diesel
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Button text: ${button_text_show}
+    Input Value Km Into Dropdown  ${KM}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Button text: ${button_text_show}
 
 
+    Log To Console  Končím vyhľadávanie a spúšťam výsledky
     #Sleep  ${SLEEP_TIME}
     #${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     #Log To Console  Button text: ${button_text_show}
@@ -232,12 +232,62 @@ Wait Until Loader Disappears And Click Buttonn
     Wait Until Element Is Not Visible  ${locator}  timeout=30s
     Click Element Using JavaScript  ${locator}
 
+Select Brand From Dropdown
+    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
+    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
+    Log To Console  Klikám na select
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //div[@class='flex space-x-1']//button[picture/img[@alt='Škoda']]
+    Click Element Using JavaScript  //div[@class='flex space-x-1']//button[picture/img[@alt='Škoda']]
+    Log To Console  Vyberám značku Škoda
+    Sleep  ${SLEEP_TIME}
+
+Select Model From Dropdown
+    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
+    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
+    Log To Console  Klikám na select
+    Sleep  ${SLEEP_TIME}
+    Scroll Element Into View  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
+    Wait Until Element Is Visible  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
+    Click Element Using JavaScript  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
+    Log To Console  Vyberám model Octavia
+    Sleep  ${SLEEP_TIME}
+
 Select Year From Dropdown
     [Arguments]  ${year}
     ${option_value}=  Set Variable  od ${year}
     Wait Until Element Is Visible  //select[@name='yearFrom']
     Click Element Using JavaScript  //select[@name='yearFrom']
     Select From List By Label  //select[@name='yearFrom']  ${option_value}
+    Log To Console  Vyhľadávam rok od
+    Sleep  ${SLEEP_TIME}
+
+Select Price From Dropdown
+    [Arguments]  ${price}
+    ${option_value}=  Set Variable  od ${price} €
+    Wait Until Element Is Visible  //select[@name='priceFrom']
+    Click Element Using JavaScript  //select[@name='priceFrom']
+    Select From List By Value  //select[@name='priceFrom']  ${price}
+    Log To Console  Vyhľadávam cenu od
+    Sleep  ${SLEEP_TIME}
+
+Select Fuel From Dropdown
+    [Arguments]  ${fuel}
+    ${option_value}=  Set Variable  ${fuel}
+    Wait Until Element Is Visible  //select[@name='fuel']
+    Click Element Using JavaScript  //select[@name='fuel']
+    Select From List By Label  //select[@name='fuel']  ${fuel}
+    Log To Console  Vyhľadávam palivo
+    Sleep  ${SLEEP_TIME}
+
+Input Value Km Into Dropdown
+    [Arguments]  ${km}
+    ${option_value}=  Set Variable  ${km}
+    Wait Until Element Is Visible  //input[@name='mileageFrom']
+    Click Element Using JavaScript  //input[@name='mileageFrom']
+    Input Text  //input[@name='mileageFrom']  ${km}
+    Log To Console  Vpisujem kilometre od
+    Sleep  ${SLEEP_TIME}
 
 Wait For Element And Compare Values
     [Arguments]  ${button_locator}  ${text_locator}

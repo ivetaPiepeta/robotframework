@@ -11,6 +11,7 @@ ${URL_NA}  https://www.autobazar.eu/vysledky-nove-auta/
 ${URL_dovoz}  https://www.autobazar.eu/vysledky-na-dovoz/
 ${URL_najnovsie}  https://www.autobazar.eu/vysledky-najnovsie/
 ${URL_sellers}  https://www.autobazar.eu/predajcovia-aut/
+${URL_seller_detail}  https://www.autobazar.eu/predajca/autodado/
 ${URL_forum}  https://forum.autobazar.eu/
 ${URL_magazin}  https://magazin.autobazar.eu/
 ${URL_AProka}  https://www.autopredajcaroka.eu/
@@ -35,6 +36,7 @@ ${KM}  10000
 ${PRICE}  30000
 ${KM2}  10000
 ${PRICE2}  2500
+
 *** Keywords ***
 Disable Insecure Request Warnings
     Evaluate  exec("import urllib3; urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)")

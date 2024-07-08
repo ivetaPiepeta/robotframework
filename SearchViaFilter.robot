@@ -181,46 +181,42 @@ Using A Filter HP
     Log To Console  Začínam vyhľadávanie
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov bez filtra: ${button_text_show}
-    Select Brand From Dropdown
-    Click Element Using JavaScript  //button[.//span[text()='Potvrdiť']]
+    Select Brand From Dropdown And Close Listbox  Škoda
+    Click At Coordinates  100  100
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov so značkou: ${button_text_show}
-    Select Model From Dropdown
-    Click Element Using JavaScript  //button[.//span[text()='Potvrdiť']]
+    Select Model From Dropdown And Close Listbox  Octavia Combi
+    Click At Coordinates  100  100
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov s modelom: ${button_text_show}
     Sleep  ${SLEEP_TIME}
-    Scroll Element Into View  //button[.//span[text()='Potvrdiť']]
-    Click Element Using JavaScript  //button[.//span[text()='Potvrdiť']]
-    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
-    Log To Console  Počet inzerátov s modelomm: ${button_text_show}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Button text: ${button_text_show}
     Scroll Element Into View  //select[@name='yearFrom']
     Select Year From Dropdown  2020
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
-    Log To Console  Button text: ${button_text_show}
+    Log To Console  Počet inzerátov od roku: ${button_text_show}
     Scroll Element Into View  //select[@name='priceFrom']
     Select Price From Dropdown  7000
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
-    Log To Console  Button text: ${button_text_show}
+    Log To Console  Počet inzerátov od ceny: ${button_text_show}
     Scroll Element Into View  //select[@name='fuel']
     Select Fuel From Dropdown  Diesel
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
-    Log To Console  Button text: ${button_text_show}
+    Log To Console  Počet inzerátov s palivom: ${button_text_show}
     Input Value Km Into Dropdown  ${KM}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
-    Log To Console  Button text: ${button_text_show}
-
+    Log To Console  Počet inzerátov s najazdenými: ${button_text_show}
+    Select Bodywork  Combi
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov s karosériou: ${button_text_show}
+    Check Sk Location Checkbox  SK
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov pre Slovensko: ${button_text_show}
 
     Log To Console  Končím vyhľadávanie a spúšťam výsledky
+    Wait Until Loader Disappears And Click Button  //button[contains(., 'Zobraziť')]
     #Sleep  ${SLEEP_TIME}
-    #${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
-    #Log To Console  Button text: ${button_text_show}
-    #Wait Until Loader Disappears And Click Button  //button[contains(., 'Zobraziť')]
-    #Sleep  ${SLEEP_TIME}
-    #${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
-    #Log To Console  Button text: ${button_text_show}
     #Wait Until Page Is Fully Loaded
     #${results_text}=    Get Text    //div[contains(@class, 'mr-[100px] font-semibold lowercase text-[rgba(235,235,245,.6)] xs:mr-1') and contains(text(), 'inzerátov')]
     #Log To Console  Results text: ${results_text}
@@ -242,7 +238,7 @@ Select Brand From Dropdown
     Log To Console  Vyberám značku Škoda
     Sleep  ${SLEEP_TIME}
 
-Select Model From Dropdown
+Select Model From Drop
     Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
     Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
     Log To Console  Klikám na select
@@ -253,13 +249,77 @@ Select Model From Dropdown
     Log To Console  Vyberám model Octavia
     Sleep  ${SLEEP_TIME}
 
+Select Model From Dropdown
+    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
+    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
+    Log To Console  Klikám na select
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
+    Click Element Using JavaScript  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), 'Octavia Combi')]
+    Log To Console  Vyberám model Octavia
+    ${button_xpath}=    Set Variable    //button[.//span[text()='Potvrdiť']]
+    ${select_xpath}=    Set Variable    //select[@name='model']
+    Click Button And Wait For Select Box To Close  ${button_xpath}  ${select_xpath}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov s modelom: ${button_text_show}
+
+Click Button And Wait For Select Box To Close
+    [Arguments]  ${button_xpath}  ${select_xpath}
+    Click Element Using JavaScript  ${button_xpath}
+    Wait Until Element Is Not Visible  ${select_xpath}
+    Log To Console  Select box zatvorený.
+
+Select Brand From Dropdown And Close Listbox
+    [Arguments]  ${brand}
+    ${button_xpath}=    Set Variable  //button[.//span[text()='Potvrdiť']]
+    ${listbox_xpath}=    Set Variable  //div[@class='scrollbar mt-[70px] h-60 w-full overflow-auto bg-[#002466] px-3 py-1 text-sm']
+    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
+    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
+    Log To Console  Klikám na select
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //div[@class='flex space-x-1']//button[picture/img[@alt='${brand}']]
+    Click Element Using JavaScript  //div[@class='flex space-x-1']//button[picture/img[@alt='${brand}']]
+    Log To Console  Vyberám značku ${brand}
+    Sleep  ${SLEEP_TIME}
+    Click Button And Wait For Listbox To Close  ${button_xpath}  ${listbox_xpath}
+    Log To Console  Zatváram listbox značka
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov so značkou: ${button_text_show}
+
+Select Model From Dropdown And Close Listbox
+    [Arguments]  ${model}
+    ${button_xpath}=    Set Variable  //button[.//span[text()='Potvrdiť']]
+    ${listbox_xpath}=    Set Variable  //div[@class='scrollbar mt-[70px] h-60 w-full overflow-auto bg-[#002466] px-3 py-1 text-sm']
+    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
+    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
+    Log To Console  Klikám na select
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), '${model}')]
+    Click Element Using JavaScript  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), '${model}')]
+    Log To Console  Vyberám model ${model}
+    Sleep  ${SLEEP_TIME}
+    Click At Coordinates  100  100
+    Log To Console  Klikám mimo scrollbaru
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Zatváram listbox model
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Počet inzerátov s modelom: ${button_text_show}
+
+Click Button And Wait For Listbox To Close
+    [Arguments]  ${button_xpath}  ${listbox_xpath}
+    Click Element Using JavaScript  ${button_xpath}
+    Wait Until Element Is Not Visible  ${listbox_xpath}  timeout=20s
+    Log To Console  Listbox zatvorený.
+
 Select Year From Dropdown
     [Arguments]  ${year}
     ${option_value}=  Set Variable  od ${year}
     Wait Until Element Is Visible  //select[@name='yearFrom']
     Click Element Using JavaScript  //select[@name='yearFrom']
     Select From List By Label  //select[@name='yearFrom']  ${option_value}
-    Log To Console  Vyhľadávam rok od
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadávam rok od: ${button_text_show}
     Sleep  ${SLEEP_TIME}
 
 Select Price From Dropdown
@@ -268,7 +328,9 @@ Select Price From Dropdown
     Wait Until Element Is Visible  //select[@name='priceFrom']
     Click Element Using JavaScript  //select[@name='priceFrom']
     Select From List By Value  //select[@name='priceFrom']  ${price}
-    Log To Console  Vyhľadávam cenu od
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadávam cenu od: ${button_text_show}
     Sleep  ${SLEEP_TIME}
 
 Select Fuel From Dropdown
@@ -277,7 +339,9 @@ Select Fuel From Dropdown
     Wait Until Element Is Visible  //select[@name='fuel']
     Click Element Using JavaScript  //select[@name='fuel']
     Select From List By Label  //select[@name='fuel']  ${fuel}
-    Log To Console  Vyhľadávam palivo
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadávam palivo: ${button_text_show}
     Sleep  ${SLEEP_TIME}
 
 Input Value Km Into Dropdown
@@ -286,7 +350,9 @@ Input Value Km Into Dropdown
     Wait Until Element Is Visible  //input[@name='mileageFrom']
     Click Element Using JavaScript  //input[@name='mileageFrom']
     Input Text  //input[@name='mileageFrom']  ${km}
-    Log To Console  Vpisujem kilometre od
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadávam kilometre: ${button_text_show}
     Sleep  ${SLEEP_TIME}
 
 Wait For Element And Compare Values
@@ -297,3 +363,30 @@ Wait For Element And Compare Values
     Wait Until Element Is Visible  ${text_locator}
     ${results_text}=  Get Text  ${text_locator}
     Should Be Equal As Numbers  ${button_text_show}  ${results_text}
+
+Click At Coordinates
+    [Arguments]  ${x}  ${y}
+    Execute Javascript  window.scrollTo(${x}, ${y});
+    Click Element At Coordinates  xpath=//body  ${x}  ${y}
+
+Select Bodywork
+    [Arguments]  ${bodywork_option}
+    Wait Until Element Is Visible  //select[@name='bodywork']
+    Log To Console  Klikám na select: ${bodywork_option}
+    Select From List By Label  //select[@name='bodywork']  ${bodywork_option}
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Potvrdzujem select: ${bodywork_option}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadávam karosériu: ${button_text_show}
+    Sleep  ${SLEEP_TIME}
+
+Check Sk Location Checkbox
+    [Arguments]  ${location}
+    Wait Until Element Is Visible  //label[input[@name='location']]//span[contains(text(), '${location}')]
+    Click Element Using JavaScript  //label[input[@name='location']]//span[contains(text(), '${location}')]
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Checkbox pre ${location} vybraný.
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadané inzeráty: ${button_text_show}
+    Sleep  ${SLEEP_TIME}

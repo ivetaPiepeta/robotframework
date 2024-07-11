@@ -17,6 +17,9 @@ ${DESKTOP_HEIGHT}  1080
 ${MOBILE_WIDTH}  390
 ${MOBILE_HEIGHT}  844
 
+
+
+
 *** Test Cases ***
 Open Browser And Check Statuses of hrefs - desktop and mobile
     [Documentation]  Tento test otvorí prehliadač, načíta stránku a overí HTTP status kód na desktope.

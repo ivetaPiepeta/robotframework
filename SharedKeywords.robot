@@ -19,6 +19,7 @@ ${URL_documents}  https://www.autobazar.eu/dokumenty
 ${URL_tests}  https://www.autobazar.eu/testy-aut/
 ${URL_prices}  https://www.autobazar.eu/ceny-aut/
 ${URL_advertisiment}  https://www.autobazar.eu/detail/mercedes-glc-kupe-220-d-4matic-a-t/31460018/
+${URL_podcast}  https://magazin.autobazar.eu/podcasty
 
 ${SLEEP_TIME}  2s
 ${USERNAME}   testsukromnik2

@@ -22,6 +22,8 @@ ${URL_advertisiment}  https://www.autobazar.eu/detail/mercedes-glc-kupe-220-d-4m
 ${URL_podcast}  https://magazin.autobazar.eu/podcasty
 
 ${SLEEP_TIME}  2s
+${WAIT_TIME}  5s
+${TYPING_DELAY}  0.5s
 ${USERNAME}   testsukromnik2
 ${PASSWORD}   Ringier01
 ${ECV_INPUT_NAME}     ecv_vozidla
@@ -29,14 +31,22 @@ ${ECV_INPUT_CLASS}    ecv-input
 @{ECV_LIST}           Z  A  5  7  5  J  L
 ${BUTTON_NEXT_TEXT}   Ďalej
 ${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
-${TYPING_DELAY}       0.5s
 ${image_path}  /Users/vlckova.brindzova/PycharmProjects/robotframework/venv/Photos/fotoDacia.jpeg
 ${image_path2}  /Users/vlckova.brindzova/PycharmProjects/robotframework/venv/Photos/adamotoo.jpeg
 ${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
 ${KM}  10000
 ${PRICE}  30000
 ${KM2}  10000
+${KM3}  100000
 ${PRICE2}  2500
+${PRICE_FROM}  13000
+${PRICE_TO}  25000
+${YEAR_FROM}  1999
+${YEAR_TO}  2024
+${FUEL}  Diesel
+${BODYWORK}  Combi
+${GEARBOX}  Automatická
+${DRIVE}  Predný
 
 *** Keywords ***
 Disable Insecure Request Warnings

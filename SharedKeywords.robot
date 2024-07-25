@@ -20,6 +20,10 @@ ${URL_tests}  https://www.autobazar.eu/testy-aut/
 ${URL_prices}  https://www.autobazar.eu/ceny-aut/
 ${URL_advertisiment}  https://www.autobazar.eu/detail/mercedes-glc-kupe-220-d-4matic-a-t/31460018/
 ${URL_podcast}  https://magazin.autobazar.eu/podcasty
+${URL_myaccount}  https://autobazar.eu/moje-konto/
+${URL_myfavorite}  https://autobazar.eu/moje-konto/oblubene/
+${URL_currentads}  https://www.autobazar.eu/sk/users.php?act=view
+${URL_noncurrentads}  https://www.autobazar.eu/sk/users.php?act=expired
 
 ${SLEEP_TIME}  2s
 ${WAIT_TIME}  5s
@@ -134,3 +138,12 @@ Perform Login Desktop
     Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
     Sleep  1s
     Log To Console  Korektné prihlásenie do AB.EU
+
+Perform Login Desktop Old
+    Wait Until Element Is Visible  //a[@class='switchLogin']
+    Click Element Using JavaScript  //a[@class='switchLogin']
+    Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
+    Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
+    Click Element Using JavaScript  //input[@type='submit' and @value='Prihlásiť sa']
+    Sleep  1s
+    Log To Console  Korektné prihlásenie do starého AB.EU

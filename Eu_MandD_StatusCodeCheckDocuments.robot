@@ -26,7 +26,7 @@ Open Browser And Check Statuses of hrefs on Desktop
 
 Open Browser And Check Statuses of hrefs on Mobile
     [Documentation]  Tento test otvorí prehliadač, načíta stránku a overí HTTP status kód na mobile.
-    Run Test With Resolution    ${MOBILE_WIDTH}    ${MOBILE_HEIGHT}
+    Run Test With Resolution Mobile    ${MOBILE_WIDTH}    ${MOBILE_HEIGHT}
 
 *** Keywords ***
 
@@ -44,6 +44,27 @@ Run Test With Resolution
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded Old
     Scroll Down To Load All Content
+    GetAllPageHrefs
+    Remove Duplicates From List
+    Log Total Links Found
+    CheckHrefsStatus
+    [Teardown]  Close Browser
+    Fail Test If Broken Links Exist
+
+Run Test With Resolution Mobile
+    [Documentation]  Tento test otvorí prehliadač, načíta stránku a overí HTTP status kód.
+    [Arguments]  ${width}  ${height}
+    Log To Console  Starting test case with resolution  ${width}  ${height}
+    Disable Insecure Request Warnings
+    Create Session  autobazar  ${URL_documents}  verify=False
+    ${response}  GET On Session  autobazar  /
+    Log  HTTP status kód je: ${response.status_code}
+    Should Be Equal As Numbers  ${response.status_code}  200
+    Open Browser  ${URL_documents}  chrome
+    Set Window Size  ${width}  ${height}
+    Switch To Frame And Accept All
+    Wait Until Page Is Fully Loaded Old
+    Scroll Down To Load Content 2 times
     GetAllPageHrefs
     Remove Duplicates From List
     Log Total Links Found

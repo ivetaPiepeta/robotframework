@@ -79,8 +79,11 @@ Scroll Down To Load All Content
     ${height}=  Execute JavaScript  return document.body.scrollHeight
     WHILE  ${True}
         ${current_height}=  Execute JavaScript  return window.scrollY
+        Log To Console  desktop scrolujem
         ${viewport_height}=  Execute JavaScript  return window.innerHeight
+        Log To Console  rozlíšenie: ${current_height} + ${viewport_height} >= ${height}
         Run Keyword If  ${current_height} + ${viewport_height} >= ${height}  Exit For Loop
+        Log To Console  desktop scrollujem
         Execute JavaScript  window.scrollBy(0, window.innerHeight)
         Sleep  1s
     END

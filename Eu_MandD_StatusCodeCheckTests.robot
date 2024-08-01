@@ -41,7 +41,7 @@ Run Test With Resolution
     Set Window Size  ${width}  ${height}
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded Old
-    Scroll Down To Load All Content
+    Scroll Down To Load Content 2 times
     GetAllPageHrefs
     Remove Duplicates From List
     Log Total Links Found

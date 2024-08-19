@@ -21,6 +21,7 @@ ${NEXT_BUTTON_XPATH}  //a[contains(@class, 'cursor-pointer') and contains(text()
 ${PAGINATOR_WRAPPER_SELLER}  //div[@class="float-none mx-0 my-0"]
 ${BUTTON_TEXT_SHOW}  //button[contains(., 'Zobraziť')]
 ${TEXT_LOCATOR}  //div[@class='mr-[100px] font-semibold lowercase text-[rgba(235,235,245,.6)] xs:mr-1']
+${SEARCH_AGENT_NAME}  Moje hľadanie
 
 
 *** Test Cases ***
@@ -39,6 +40,7 @@ Seller check
     Using A Filter HP For Search Agent
 
     Save A New Search Agent
+    Detele A Search Agent
 
     Sleep  ${SLEEP_TIME}
     Wait Until Page Is Fully Loaded
@@ -395,3 +397,41 @@ Save A New Search Agent
     Log To Console  Klikám na uloženie hľadania
     Wait Until Element Is Visible  //input[@type='text' and @name='title' and @placeholder='Moje obľúbené vyhľadávanie č.1']
     Log To Console  Zobrazí sa modal pre uloženie
+    Click Element Using JavaScript  //input[@type='text' and @name='title' and @placeholder='Moje obľúbené vyhľadávanie č.1']
+    Log To Console  Klikne sa modal pre uloženie - názov
+    Input Text Slowly  //input[@type='text' and @name='title' and @placeholder='Moje obľúbené vyhľadávanie č.1']  ${SEARCH_AGENT_NAME}
+    Log To Console  Vypíše sa modal pre uloženie - názov
+    Click Element Using JavaScript  //select[@name='schedule']
+    Log To Console  Klikne sa modal pre uloženie - frekvencia
+    Select From List By Value  //select[@name='schedule']  0
+    Log To Console  Vyberie sa modal pre uloženie - názov - Posielať ihneď
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //button[@type='submit' and contains(text(), 'Uložiť hľadanie')]
+    Capture Page Screenshot
+    Log To Console  Idem uložiť hľadanie - tlačidlo je viditeľné
+    Click Element  //button[@type='submit' and contains(text(), 'Uložiť hľadanie')]
+    Log To Console  Hľadanie uložené.
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //button[@class='button-search mt-7' and contains(text(), 'Rozumiem')]
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Potvrdzujem, že rozumiem.
+    Click Element  //button[@class='button-search mt-7' and contains(text(), 'Rozumiem')]
+    Log To Console  Klikám, že rozumiem.
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //div[@class='mb-2 hidden h-[44px] w-full items-center justify-evenly rounded-[8px] bg-[#002973] text-[14px] font-medium lg:flex']
+    Click Element  //a[contains(@href, '/sk/users.php?act=preferences')]
+    Log To Console  Klikli sme na "Uložené hľadania"
+
+Detele A Search Agent
+   Wait Until Page Is Fully Loaded Ecv Part
+   Log To Console  brm
+
+
+
+Input Text Slowly
+    [Arguments]  ${locator}  @{text}
+    FOR  ${char}  IN  @{text}
+        Log To Console  ${char}
+        Input Text  ${locator}  ${char}
+        Sleep  ${TYPING_DELAY}
+    END

@@ -43,7 +43,7 @@ Seller check
     Detele A Search Agent
 
     Sleep  ${SLEEP_TIME}
-    Wait Until Page Is Fully Loaded
+    Wait Until Page Is Fully Loaded Ecv Part
     Get All Links And Check Status For All Pages
     Fail Test If Broken Links Exist
     Log All Valid Links
@@ -198,17 +198,21 @@ Using A Filter HP For Search Agent
     Log To Console  Button text: ${button_text_show}
     Scroll Element Into View  //select[@name='yearFrom']
     Select Year From Dropdown  2022
+    Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov od roku: ${button_text_show}
     Scroll Element Into View  //select[@name='priceFrom']
     Select Price From Dropdown  8000
+    Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov od ceny: ${button_text_show}
     Scroll Element Into View  //select[@name='fuel']
     Select Fuel From Dropdown  Benzín
+    Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov s karosériou: ${button_text_show}
     Check Sk Location Checkbox  CZ
+    Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov pre Slovensko: ${button_text_show}
 
@@ -423,10 +427,20 @@ Save A New Search Agent
     Log To Console  Klikli sme na "Uložené hľadania"
 
 Detele A Search Agent
-   Wait Until Page Is Fully Loaded Ecv Part
-   Log To Console  brm
-
-
+    Wait Until Page Is Fully Loaded Ecv Part
+    Log To Console  brm
+    Wait Until Element Is Visible  //a[@title='Zmazať']
+    Click Element  //a[@title='Zmazať' and @data-modal-plt-name='Moje hľadanie']
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Klikli sme na link "Zmazať"
+    Handle Alert  ACCEPT
+    Log To Console  Upozornenie spracované.
+    Sleep  ${SLEEP_TIME}
+    Wait Until Element Is Visible  //a[@class='modal-button' and contains(text(), 'Rozumiem')]  10s
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Potvrdzujem, že rozumiem.
+    Click Element  //a[@class='modal-button' and contains(text(), 'Rozumiem')]
+    Log To Console  Klikám, že rozumiem.
 
 Input Text Slowly
     [Arguments]  ${locator}  @{text}

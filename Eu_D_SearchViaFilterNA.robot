@@ -18,6 +18,7 @@ ${SLEEP_TIME}  2s
 ${Search_Term}  ABS
 @{Paginator_Links}
 ${NEXT_BUTTON_XPATH}  //a[contains(@class, 'cursor-pointer') and contains(text(), 'Ďalší predajcovia')]
+${NEXT_BUTTON_XPATH2}  //a[contains(@class, 'cursor-pointer') and contains(text(), 'Ďalšie inzeráty')]
 ${PAGINATOR_WRAPPER_SELLER}  //div[@class="float-none mx-0 my-0"]
 ${BUTTON_TEXT_SHOW}  //button[contains(., 'Zobraziť')]
 ${TEXT_LOCATOR}  //div[@class='mr-[100px] font-semibold lowercase text-[rgba(235,235,245,.6)] xs:mr-1']
@@ -35,15 +36,12 @@ Seller check
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
     Scroll Down To Load Content 1 time
-
     Using A Filter NA
-
     Sleep  ${SLEEP_TIME}
     Wait Until Page Is Fully Loaded
-    Get All Links And Check Status For All Pages
+    Get All Links And Check Status For All Pages NA
     Fail Test If Broken Links Exist
     Log All Valid Links
-
 
 *** Keywords ***
 Navigate ThroughPages Until Last Span
@@ -59,6 +57,25 @@ Navigate ThroughPages Until Last Span
         ${next_url}=  Evaluate  helper.get_next_page_url("${current_url}", ${urls})
         Log To Console    Next URL is: ${next_url}
         Open Valid Link And Check Inner Links  ${current_url}
+        Run Keyword If  '${next_url}' == 'None'  Exit For Loop
+        Run Keyword If  '${next_url}' != 'None'  Go To  ${next_url}
+        Run Keyword If  '${next_url}' != 'None'  Sleep  1s  # Wait for the next page to load
+    END
+    Sleep  2s
+
+Navigate ThroughPages Until Last Span NA
+    ${last_page}=  Get Variable Value  ${False}
+    WHILE  '${last_page}' == '${False}'
+        @{elements}=  Get WebElements  ${PAGINATOR_WRAPPER_SELLER}//a | ${PAGINATOR_WRAPPER_SELLER}//span
+        ${urls}=  Create List
+        FOR  ${element}  IN  @{elements}
+            ${href}=  Get Element Attribute  ${element}  href
+            Run Keyword If  '${href}'  Append To List  ${urls}  ${href}
+        END
+        ${current_url}=  Get Location
+        ${next_url}=  Evaluate  helper.get_next_page_url("${current_url}", ${urls})
+        Log To Console    Next URL is: ${next_url}
+        Open Valid Link And Check Inner Links NA  ${current_url}
         Run Keyword If  '${next_url}' == 'None'  Exit For Loop
         Run Keyword If  '${next_url}' != 'None'  Go To  ${next_url}
         Run Keyword If  '${next_url}' != 'None'  Sleep  1s  # Wait for the next page to load
@@ -86,6 +103,17 @@ Input Search Term And Click Button
 Get All Links
     [Documentation]  Získaj všetky odkazy (a-href) z prvkov s triedou `flex flex-wrap justify-between gap-2`.
     @{elements}=  Get WebElements  //div[contains(@class, 'flex flex-wrap justify-between gap-2')]//a
+    ${links}=  Create List
+    FOR  ${element}  IN  @{elements}
+        ${href}=  Get Element Attribute  ${element}  href
+        Append To List  ${links}  ${href}
+    END
+    ${unique_links}=  Remove Duplicates  ${links}
+    Set Global Variable  ${Links}  ${unique_links}
+
+Get All Links NA
+    [Documentation]  Získaj všetky odkazy (a-href) z prvkov s triedou `float-none mx-0 my-0`.
+    @{elements}=  Get WebElements  //div[contains(@class, 'justify-between')]//a
     ${links}=  Create List
     FOR  ${element}  IN  @{elements}
         ${href}=  Get Element Attribute  ${element}  href
@@ -144,16 +172,16 @@ Log All Valid Links
     [Documentation]  Zaloguje všetky platné odkazy na konci testu.
     Log To Console  Valid links found: ${Valid_Links}
 
-Get All Links And Check Status For All Pages
+Get All Links And Check Status For All Pages NA
     [Documentation]  Získa všetky odkazy a skontroluje ich stav pre všetky strany v paginácii.
     WHILE  True
-        ${next_button_exists}=  Run Keyword And Return Status  Page Should Contain Element  ${NEXT_BUTTON_XPATH}
-        Get All Links
+        ${next_button_exists}=  Run Keyword And Return Status  Page Should Contain Element  ${NEXT_BUTTON_XPATH2}
+        Get All Links NA
         Log Total Links Found
         CheckHrefsStatus
         Clear List  @{Links}
         Run Keyword If  ${next_button_exists} == False  Exit For Loop
-        Click Element Using JavaScript  ${NEXT_BUTTON_XPATH}
+        Click Element Using JavaScript  ${NEXT_BUTTON_XPATH2}
         Sleep  ${SLEEP_TIME}
         Wait Until Page Is Fully Loaded
     END
@@ -176,6 +204,24 @@ Open Valid Link And Check Inner Links
         Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
     END
 
+Open Valid Link And Check Inner Links NA
+    [Arguments]  ${url}
+    [Documentation]  Otvorí platný odkaz a skontroluje vnútorné odkazy.
+    Log To Console  Otváram odkaz: ${url}
+    Go To    ${url}
+    Wait Until Page Is Fully Loaded
+    ${image_a}=  Get WebElements  //div[contains(@class, 'my-0') and contains(@class, 'w-auto') and contains(@class, 'float-none') and contains(@class, 'rounded-lg') and contains(@class, 'font-semibold') and contains(@class, 'transition-all') and contains(@class, 'mduration-[0.2s]') and contains(@class, 'min-w-[40px]')]/a[1]
+
+    FOR  ${link}  IN  @{image_a}
+        ${href}=  Get Element Attribute  ${link}  href
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
+        Log To Console  ${status}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        Log To Console  status kód linku ${href} je ${status_code}
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
+    END
+
 Using A Filter NA
     Wait Until Page Is Fully Loaded
     Log To Console  Začínam vyhľadávanie
@@ -187,7 +233,7 @@ Using A Filter NA
     Click At Coordinates  100  100
     ${button_text_show}=    Get Text    //button[contains(., 'Potvrdiť')]
     Log To Console  Počet inzerátov so značkou: ${button_text_show}
-    Select Model From NA Dropdown And Close Listbox  Octavia Combi
+    Select Model From NA Dropdown And Close Listbox  Kamiq
     Click At Coordinates  100  100
     Sleep  ${SLEEP_TIME}
     Click At Coordinates  100  100
@@ -195,10 +241,9 @@ Using A Filter NA
     Log To Console  Počet inzerátov s modelom: ${button_text_show}
     Sleep  ${SLEEP_TIME}
     Scroll Element Into View  //button[@class='absolute inset-y-0 right-0 flex items-center pr-1 disabled:cursor-not-allowed disabled:opacity-60 pr-2']
-    Select Price From NA Dropdown  5 000
+    Set Price From Input  ${PRICE_FROM}
     ${button_text_show}=    Get Text    //button[contains(., 'Potvrdiť')]
     Log To Console  Počet inzerátov od ceny: ${button_text_show}
-
     Log To Console  Končím vyhľadávanie a spúšťam výsledky
     Wait Until Loader Disappears And Click Button  //button[contains(., 'Potvrdiť')]
 
@@ -345,21 +390,6 @@ Select Price From Dropdown
     Select From List By Value  //select[@name='priceFrom']  ${price}
     Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
-    Log To Console  Vyhľadávam cenu od: ${button_text_show}
-    Sleep  ${SLEEP_TIME}
-
-Select Price From NA Dropdown
-    [Arguments]  ${price}
-    ${option_value}=  Set Variable  od ${price} €
-    Wait Until Element Is Visible  //button[@class='absolute inset-y-0 right-0 flex items-center pr-1 disabled:cursor-not-allowed disabled:opacity-60 pr-2']
-    Click Element Using JavaScript  //button[@class='absolute inset-y-0 right-0 flex items-center pr-1 disabled:cursor-not-allowed disabled:opacity-60 pr-2']
-    Log To Console  brmdd
-    Sleep  ${SLEEP_TIME}
-    Wait Until Element Is Visible  //select[@name, 'priceFrom') and contains(@class, 'block disabled:cursor-not-allowed disabled:opacity-60 lg:hidden rounded-lg min-w-0 border-[1px] border-solid border-[#EBEBF518] p-[12px] text-4 leading-6 placeholder:text-white na-select field-select-dark')]
-    Log To Console  Klikám na select s cenou od.
-    Click Element Using JavaScript  //div[@role='option']//span[contains(text(), 'od ${price} €')]
-    Sleep  ${SLEEP_TIME}
-    ${button_text_show}=    Get Text    //button[contains(., 'Potvrdiť')]
     Log To Console  Vyhľadávam cenu od: ${button_text_show}
     Sleep  ${SLEEP_TIME}
 

@@ -83,6 +83,11 @@ Wait Until Page Is Fully Loaded Ecv Part
     ${ready_state}=  Execute JavaScript  return document.readyState
     Wait Until Keyword Succeeds  1 min  1 sec  Execute JavaScript  return document.readyState == 'complete'
 
+Wait Until Page Is Fully Loaded Old
+    ${ready_state}=  Execute JavaScript  return document.readyState
+    Wait Until Keyword Succeeds  1 min  1 sec  Execute JavaScript  return document.readyState == 'complete'
+    Log To Console  Načítavam stránku
+
 GetAllPageHrefs
     [Documentation]  Získa všetky odkazy (a-href) na stránke.
     ${links}=  Get WebElements  //a[@href]
@@ -311,4 +316,68 @@ Open Valid Link And Check Inner Links
         Log To Console  status kód linku ${href} je ${status_code}
         Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${href}
         Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
+    END
+
+Get All Links In Element
+    [Arguments]  ${element_xpath}
+    ${elements}=  Get WebElements  ${element_xpath}//a
+    ${hrefs}=  Create List
+    FOR  ${element}  IN  @{elements}
+        ${href}=  Get Element Attribute  ${element}  href
+        Append To List  ${hrefs}  ${href}
+    END
+    RETURN  ${hrefs}
+
+Verify Status For All Links
+    [Arguments]  @{hrefs}
+    FOR  ${href}  IN  @{hrefs}
+        ${response}=  GET On Session  autobazar  ${href}
+        Log To Console  ${href} - Status Code: ${response.status_code}
+        Should Be Equal As Numbers  ${response.status_code}  200  Status code of ${href} should be 200
+    END
+
+Click And Verify Links On Page From Current Session
+    [Arguments]  @{hrefs}
+    ${MAIN_WINDOW}=  Get Window Handles  # Uložíme hlavné okno
+    FOR  ${href}  IN  @{hrefs}
+        ${full_url}=  Evaluate  '${href}'  # Získanie úplnej URL
+        Log To Console  Klikám na link: ${full_url}
+
+        # Klikneme na odkaz priamo a prejdeme na novú stránku
+        Go To  ${full_url}
+        Wait Until Page Is Fully Loaded Old
+        Log To Console  Kontrolujem status kódy pre odkazy na stránke: ${full_url}
+
+        # Získame všetky odkazy na stránke
+        GetAllPageHrefs
+        Remove Duplicates From List
+        Log Total Links Found
+        CheckHrefsStatus
+
+        # Vrátime sa na pôvodnú stránku
+        Go To  ${Base_URL}
+        Wait Until Page Is Fully Loaded Old
+    END
+    Log To Console  Overujem celé podmenu.
+
+Open Valid Links And Check Status
+    [Arguments]  ${url}
+    Log To Console  Otváram odkaz: ${url}
+    Go To    ${url}
+    Wait Until Page Is Fully Loaded
+    FOR  ${link}  IN  @{elemements}
+        ${href}=  Get Element Attribute  ${link}  href
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
+        Log To Console  ${status}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        Log To Console  status kód linku ${href} je ${status_code}
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
+    END
+
+Repeat All Pages
+    [Arguments]  ${url}
+    Log To Console  Otváram odkaz: ${url}
+    FOR  ${url}  IN  @{Valid_Links}
+        Open Valid Links And Check Status  ${url}
     END

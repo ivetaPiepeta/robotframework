@@ -12,6 +12,8 @@ ${URL_dovoz}  https://www.autobazar.eu/vysledky-na-dovoz/
 ${URL_najnovsie}  https://www.autobazar.eu/vysledky-najnovsie/
 ${URL_sellers}  https://www.autobazar.eu/predajcovia-aut/
 ${URL_seller_detail}  https://www.autobazar.eu/predajca/autodado/
+${URL_seller_detail2}  https://www.autobazar.eu/predajca/styxvrable/
+${URL_seller_detail3}  https://www.autobazar.eu/predajca//
 ${URL_forum}  https://forum.autobazar.eu/
 ${URL_magazin}  https://magazin.autobazar.eu/
 ${URL_AProka}  https://www.autopredajcaroka.eu/
@@ -24,6 +26,12 @@ ${URL_myaccount}  https://autobazar.eu/moje-konto/
 ${URL_myfavorite}  https://autobazar.eu/moje-konto/oblubene/
 ${URL_currentads}  https://www.autobazar.eu/sk/users.php?act=view
 ${URL_noncurrentads}  https://www.autobazar.eu/sk/users.php?act=expired
+${URL_modificate}  https://www.autobazar.eu/vysledky/nakladne-vozidla-nad-7-5t/
+
+${DESKTOP_WIDTH}  1920
+${DESKTOP_HEIGHT}  1080
+${MOBILE_WIDTH}  390
+${MOBILE_HEIGHT}  844
 
 ${SLEEP_TIME}  2s
 ${WAIT_TIME}  5s
@@ -54,6 +62,7 @@ ${DRIVE}  Predný
 
 *** Keywords ***
 Disable Insecure Request Warnings
+    [Documentation]  Potlačí upozornenia na neoverené HTTPS požiadavky.
     Evaluate  exec("import urllib3; urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)")
 
 Switch To Frame And Accept All
@@ -71,9 +80,27 @@ Wait Until Page Is Fully Loaded
 
 Wait Until Page Is Fully Loaded Ecv Part
     Wait Until Page Contains Element  //footer
-
     ${ready_state}=  Execute JavaScript  return document.readyState
     Wait Until Keyword Succeeds  1 min  1 sec  Execute JavaScript  return document.readyState == 'complete'
+
+GetAllPageHrefs
+    [Documentation]  Získa všetky odkazy (a-href) na stránke.
+    ${links}=  Get WebElements  //a[@href]
+    FOR  ${link}  IN  @{links}
+        ${href}=  Get Element Attribute  ${link}  href
+        ${should_ignore}=  Should Ignore Href  ${href}
+        Run Keyword If  '${should_ignore}' == 'False'  Append To List  ${All_links}  ${href}
+    END
+
+Remove Duplicates From List
+    [Documentation]  Odstráni duplicity zo zoznamu odkazov.
+    ${unique_links}=  Remove Duplicates  ${All_links}
+    Set Global Variable  ${All_links}  ${unique_links}
+
+Remove Duplicates From Listt
+    [Documentation]  Odstráni duplicity zo zoznamu odkazov.
+    ${unique_links}=  Remove Duplicates  ${Links}
+    Set Global Variable  ${Links}  ${unique_links}
 
 Scroll Down To Load All Content
     ${height}=  Execute JavaScript  return document.body.scrollHeight
@@ -97,7 +124,6 @@ Scroll Down To Load Content 1 time
     Execute JavaScript    window.scrollBy(0, window.innerHeight)
     Sleep    1s
 
-
 Scroll Down To Load Content 2 times
     FOR    ${i}    IN RANGE    2
         Execute JavaScript    window.scrollBy(0, window.innerHeight)
@@ -114,6 +140,52 @@ Click Element Using JavaScript
     [Arguments]  ${xpath}
     Execute JavaScript  document.evaluate("${xpath}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click()
     Sleep  1s
+
+CheckHrefsStatus
+    FOR  ${page}  IN  @{All_links}
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${page}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${page}  ${status_code}
+        ${REMAINING_LINKS}=  Evaluate  ${REMAINING_LINKS} - 1
+        Log To Console  ${REMAINING_LINKS}/${TOTAL_LINKS} ${page}  no new line=True
+    END
+    Set Variable  @{All_links}  @{EMPTY}
+
+Check Single Href Status
+    [Arguments]  ${page}
+    Disable Insecure Request Warnings
+    ${response}=  GET On Session  autobazar  ${page}
+    Log  HTTP status kód pre ${page} je: ${response.status_code}
+    RETURN  ${response.status_code}
+
+Should Ignore Href
+    [Arguments]  ${href}
+    ${result}=  Run Keyword And Return Status  Should Contain Any  ${href}  @{Ignored_Patterns}
+    RETURN  ${result}
+
+Log Total Links Found
+    [Documentation]  Zaloguje celkový počet nájdených odkazov.
+    ${total_links}=  Get Length  ${All_links}
+    Log To Console  Total links found: ${total_links}
+    Set Global Variable  ${TOTAL_LINKS}  ${total_links}
+    Set Global Variable  ${REMAINING_LINKS}  ${total_links}
+
+Log Broken Link
+    [Arguments]  ${url}  ${status_code}
+    Log  Broken link found: ${url} with status code: ${status_code}
+    Append To List  ${Broken_Links}  ${url}
+
+Log Valid Link
+    [Arguments]  ${url}
+    Log  Valid link found: ${url} with status code: ${status_code}
+    Append To List  ${Valid_Links}  ${url}
+
+Log All Valid Links
+    [Documentation]  Zaloguje všetky platné odkazy na konci testu.
+    Log To Console  Valid links found: ${Valid_Links}
+
+Fail Test If Broken Links Exist
+    Run Keyword If  ${Broken_Links}  Fail  Broken links found: ${Broken_Links}
 
 Select Option From Dropdown By Index
     [Arguments]    ${dropdown_locator}    ${index}
@@ -150,3 +222,93 @@ Perform Login Desktop Old
     Click Element Using JavaScript  //input[@type='submit' and @value='Prihlásiť sa']
     Sleep  1s
     Log To Console  Korektné prihlásenie do starého AB.EU
+
+Set Price From Input
+    [Arguments]  ${price}
+    Scroll Element Into View  //input[@placeholder='Cena od']
+    Wait Until Element Is Visible  //input[@placeholder='Cena od']  20s
+    Execute JavaScript  document.querySelector("input[placeholder='Cena od']").style.visibility='visible'
+    Clear Element Text  //input[@placeholder='Cena od']
+    Input Text  //input[@placeholder='Cena od']  ${PRICE_FROM}
+    Wait Until Element Is Visible   //div[@role='listbox']//div[@role='option']
+    Click Element  //div[@role='listbox']//div[@role='option']
+    Log To Console  Vložená cena od: ${price}
+    Sleep  20s
+
+
+Seller Links Check
+    [Documentation]  Tento test otvorí prehliadač, načíta stránku predajcov aut, overí HTTP status kód každého inzerátu kliknutím na obrázok.
+    Disable Insecure Request Warnings
+    FOR  ${url}  IN  @{Valid_Links}
+        Open Valid Link And Check Inner Links  ${url}
+    END
+    Navigate ThroughPages Until Last Span
+    [Teardown]  Close Browser
+    Fail Test If Broken Links Exist
+
+Navigate ThroughPages Until Last Span
+    ${last_page}=  Get Variable Value  ${False}
+    WHILE  '${last_page}' == '${False}'
+        @{elements}=  Get WebElements  ${PAGINATOR_WRAPPER_SELLER}//a | ${PAGINATOR_WRAPPER_SELLER}//span
+        ${urls}=  Create List
+        FOR  ${element}  IN  @{elements}
+            ${href}=  Get Element Attribute  ${element}  href
+            Run Keyword If  '${href}'  Append To List  ${urls}  ${href}
+        END
+        ${current_url}=  Get Location
+        ${next_url}=  Evaluate  helper.get_next_page_url("${current_url}", ${urls})
+        Log To Console    Next URL is: ${next_url}
+        Open Valid Link And Check Inner Links  ${current_url}
+        Run Keyword If  '${next_url}' == 'None'  Exit For Loop
+        Run Keyword If  '${next_url}' != 'None'  Go To  ${next_url}
+        Run Keyword If  '${next_url}' != 'None'  Sleep  1s  # Wait for the next page to load
+    END
+    Sleep  2s
+
+Input Search Term And Click Button
+    [Arguments]  ${term}
+    Input Text  //input[@type='search' and @placeholder='Napíšte hľadaný výraz']  ${term}
+    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'mt-5 w-full space-x-2 rounded-lg bg-[#0071e3] px-[15px] py-[14px] font-semibold disabled:bg-[#0071e3]/80 disabled:text-white/80 lg:w-[170px]')]
+
+Get All Links
+    [Documentation]  Získaj všetky odkazy (a-href) z prvkov s triedou `flex flex-wrap justify-between gap-2`.
+    @{elements}=  Get WebElements  //div[contains(@class, 'flex flex-wrap justify-between gap-2')]//a
+    ${links}=  Create List
+    FOR  ${element}  IN  @{elements}
+        ${href}=  Get Element Attribute  ${element}  href
+        Append To List  ${links}  ${href}
+    END
+    ${unique_links}=  Remove Duplicates  ${links}
+    Set Global Variable  ${Links}  ${unique_links}
+
+Get All Links And Check Status For All Pages
+    [Documentation]  Získa všetky odkazy a skontroluje ich stav pre všetky strany v paginácii.
+    WHILE  True
+        ${next_button_exists}=  Run Keyword And Return Status  Page Should Contain Element  ${NEXT_BUTTON_XPATH}
+        Get All Links
+        Log Total Links Found
+        CheckHrefsStatus
+        Clear List  @{Links}
+        Run Keyword If  ${next_button_exists} == False  Exit For Loop
+        Click Element Using JavaScript  ${NEXT_BUTTON_XPATH}
+        Sleep  ${SLEEP_TIME}
+        Wait Until Page Is Fully Loaded
+    END
+
+Open Valid Link And Check Inner Links
+    [Arguments]  ${url}
+    [Documentation]  Otvorí platný odkaz a skontroluje vnútorné odkazy.
+    Log To Console  Otváram odkaz: ${url}
+    Go To    ${url}
+    Wait Until Page Is Fully Loaded
+    ${image_a}=  Get WebElements  //div[contains(@class, 'mt-8') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5') and contains(@class, 'md:min-h-[192px]') and contains(@class, 'flex-row')]/a[1]
+
+    FOR  ${link}  IN  @{image_a}
+        ${href}=  Get Element Attribute  ${link}  href
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
+        Log To Console  ${status}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        Log To Console  status kód linku ${href} je ${status_code}
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
+    END

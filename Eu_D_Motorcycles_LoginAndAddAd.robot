@@ -46,7 +46,7 @@ Run Test With Resolution
     Add With No Ecv Desktop
     Choose A Model Starfinger
     Price Part Motorcycle
-    Upload An Image
+    Upload An Image  ${image_path2}
     Click Next Button Desktop
     Confirm Checkbox Add Ad
     Check Adding Of Adv

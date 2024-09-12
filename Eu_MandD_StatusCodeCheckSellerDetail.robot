@@ -91,11 +91,11 @@ Run Test With Resolution
     [Documentation]  Tento test otvorí prehliadač, načíta stránku a overí HTTP status kód.
     [Arguments]  ${width}  ${height}
     Disable Insecure Request Warnings
-    Create Session  autobazar  ${URL_seller_detail}  verify=False
+    Create Session  autobazar  ${URL_seller_detail2}  verify=False
     ${response}  GET On Session  autobazar  /
     Log  HTTP status kód je: ${response.status_code}
     Should Be Equal As Numbers  ${response.status_code}  200
-    Open Browser  ${URL_seller_detail}  chrome
+    Open Browser  ${URL_seller_detail2}  chrome
     Set Window Size  ${width}  ${height}
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded

@@ -37,6 +37,7 @@ ${BUTTON_TEXT_CALL}  Zavolať
 ${BUTTON_TEXT_WRITE}  Napísať
 ${BUTTON_TEXT_VISIT}  Navštíviť
 
+${SEARCH_AGENT_NAME}  Moje hľadanie
 
 ${SLEEP_TIME}  2s
 ${WAIT_TIME}  5s

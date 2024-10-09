@@ -7,6 +7,8 @@ Library  OperatingSystem
 
 *** Variables ***
 ${Base_URL}  https://www.autobazar.eu/
+${NSK_URL}  https://www.nehnutelnosti.sk/
+${Work_URL}  https://next.autobazareu.work/
 ${URL_NA}  https://www.autobazar.eu/vysledky-nove-auta/
 ${URL_dovoz}  https://www.autobazar.eu/vysledky-na-dovoz/
 ${URL_najnovsie}  https://www.autobazar.eu/vysledky-najnovsie/
@@ -27,6 +29,7 @@ ${URL_myfavorite}  https://autobazar.eu/moje-konto/oblubene/
 ${URL_currentads}  https://www.autobazar.eu/sk/users.php?act=view
 ${URL_noncurrentads}  https://www.autobazar.eu/sk/users.php?act=expired
 ${URL_modificate}  https://www.autobazar.eu/vysledky/nakladne-vozidla-nad-7-5t/
+${URL_CZ}  https://www.autobazar.cz
 
 ${DESKTOP_WIDTH}  1920
 ${DESKTOP_HEIGHT}  1080
@@ -41,12 +44,16 @@ ${SEARCH_AGENT_NAME}  Moje hľadanie
 
 ${SLEEP_TIME}  2s
 ${WAIT_TIME}  5s
+${WAIT_TIMEOUT}  20s
 ${TYPING_DELAY}  0.5s
+${USERNAME_WORK}   iveta1234522
 ${USERNAME}   testsukromnik2
+${PASSWORD_WORK}   takenejake2H
 ${PASSWORD}   Ringier01
 ${ECV_INPUT_NAME}     ecv_vozidla
 ${ECV_INPUT_CLASS}    ecv-input
 @{ECV_LIST}           Z  A  5  7  5  J  L
+${ECV_LIST2}           ZA575JL
 ${BUTTON_NEXT_TEXT}   Ďalej
 ${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
 ${image_path}  /Users/vlckova.brindzova/PycharmProjects/robotframework/venv/Photos/fotoDacia.jpeg
@@ -65,6 +72,15 @@ ${FUEL}  Diesel
 ${BODYWORK}  Combi
 ${GEARBOX}  Automatická
 ${DRIVE}  Predný
+${NRofDOORS}  31408
+${DOORS_value}  5
+
+${textarea_name1}  otherEquipment
+${textarea_name2}  noteForBuyer
+${placeholder1}  Napríklad: rok staré, možnosť odkúpenia auta, garážované a pod...
+${RANDOM_TEXT}  Testovací inzerát, prosím nereagujte naň.
+${RANDOM_TEXT2}  Testovací inzerát, prosím nereagujte naň, určite.
+${RANDOM_NAME}  Najlepšie auto!
 
 *** Keywords ***
 Disable Insecure Request Warnings
@@ -75,6 +91,12 @@ Switch To Frame And Accept All
     Wait Until Page Contains Element  //iframe[@title='SP Consent Message']
     Select Frame    //iframe[@title='SP Consent Message']
     Click Element    //button[@title='Prijať všetko']
+    Unselect Frame
+
+Switch To Frame And Accept All CZ
+    Wait Until Page Contains Element  //iframe[@title='SP Consent Message']
+    Select Frame    //iframe[@title='SP Consent Message']
+    Click Element    //button[@title='Přijmout vše']
     Unselect Frame
 
 Wait Until Page Is Fully Loaded

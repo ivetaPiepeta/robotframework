@@ -42,11 +42,17 @@ Run Test With Resolution
     #Choose A Model Prestige Work
     Basic Data Work
     Click Next Button Desktop Work
-
+    Vehicle Equipment Work
+    Click Next Button Desktop Work
+    Name And Condition Of The Vehicle
+    Click Next Button Desktop Work
     Price Part Work
-    Log To Console  pridanie4
-    Upload An Image
-    Click Next Button Desktop
+    Click Next Button Desktop Work
+    Upload An Image Work  ${image_path2}
+    Click Next Button Desktop Work
+
+    #tu som skoncila
+
     Confirm Checkbox Add Ad
     Check Adding Of Adv
     Sleep  ${SLEEP_TIME}
@@ -150,29 +156,17 @@ Clear Text In Input
     Clear Element Text  ${XPATH_INPUT}
     Log To Console  výmaz vinka
 
-Price Part Work
-    Wait Until Page Is Fully Loaded Ecv Part
-    Click Next Button Desktop
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/vybava
-    Click Next Button Desktop
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/stav
-    Wait Until Element Is Visible  //input[@type='number' and @name='price' and @id='normalPrice' and contains(@class, 'normalPrice')]
-    Log To Console  vpisujem cenu
-    Click Element Using JavaScript  //input[@type='number' and @name='price' and @id='normalPrice']
-    Log To Console  klik cena
-    Input Text  //input[@type='number' and @name='price' and @id='normalPrice']  ${PRICE}
-    Log To Console  vpisujem cenu
-    Sleep  ${SLEEP_TIME}
-    Click Next Button Desktop
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/cena
-
-Upload An Image
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/media
-    # Kliknutie na tlačidlo "nahrajte" na zviditeľnenie input elementu
-    Click Element Using JavaScript    xpath=//button[contains(@class, 'data-button-upload-photos')]
+Upload An Image Work
+    [Arguments]  ${image}
+    ${current_url}=    Get Location
+    Log To Console  Aktuálna URL je: ${current_url}
+    Wait Until Element Is Visible  //div[contains(@class,'border-dashed') and contains(@class,'bg-[#002466]')]  timeout=${WAIT_TIMEOUT}
+    Click Element Using JavaScript  //div[contains(@class,'border-dashed') and contains(@class,'bg-[#002466]')]
+    Log To Console  Klikol som na element
     # Výber a nahranie súboru
-    Choose File     xpath=//input[@type='file']    ${IMAGE_PATH}
+    Choose File     xpath=//input[@type='file']    ${image}
     Sleep   ${SLEEP_TIME}
+    Log To Console  Nahratý obrázok.
 
 
 Confirm Checkbox Add Ad
@@ -263,6 +257,26 @@ Basic Data Work
     Basic Data Drive Work
     Basic Data Gearbox Work
     Needed Data Work
+    Click Optional Parameters Button Work
+    Extra Basic Data Work
+
+Vehicle Equipment Work
+    [Documentation]  Výbava vozidla - Bezpečnosť a stabilizačné systémy, interiér, Exteriér, Komfort a multimédia, Funkcie a asistenčné služby a ďalšia výbava v poznámke.
+    Wait Until Page Is Fully Loaded Old
+    ${current_url}=    Get Location
+    Log To Console  Aktuálna URL je: ${current_url}
+    Click Safety And Stabilization Systems Work
+    Click Interier Work
+    Click Exterier Work
+    Click Comfort And Multimedia Work
+    Click Features and Assistance Services Work
+    Note Work  ${textarea_name1}  ${placeholder1}  ${RANDOM_TEXT}
+
+Name And Condition Of The Vehicle
+    [Documentation]  Názov a stav vozidla.
+    Renaming Work
+    Condition Work
+    Note Work  ${textarea_name2}  ${placeholder1}  ${RANDOM_TEXT2}
 
 Basic Data Bodywork Work
     Wait Until Page Is Fully Loaded Old
@@ -319,18 +333,192 @@ Needed Data Work
     Sleep  ${SLEEP_TIME}
     Log To Console  Potvrdzujem select počet dverí: ${DOORS_value}
     #
+    Click Element Using JavaScript  //input[@name='mileage']
+    Log To Console  Klikám na input Najazdené kilometre.
+    Input Text  //input[@name='mileage']  6666
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Vpisujem počet najazdených kilometrov.
+
+Click Optional Parameters Button Work
+    Wait Until Element Is Visible  //button[contains(@class,'relative') and contains(@class,'flex') and contains(.,'Ďalšie nepovinné parametre')]
+    Scroll Element Into View  //button[contains(@class,'relative') and contains(@class,'flex') and contains(.,'Ďalšie nepovinné parametre')]
+    Click Element Using JavaScript  //button[contains(@class,'relative') and contains(@class,'flex') and contains(.,'Ďalšie nepovinné parametre')]
+    Log To Console  Klikám na Ďalšie nepovinné parametre
+    Wait Until Element Is Visible  //div[contains(@class,'rounded-b-[16px]') and @data-headlessui-state='open']  timeout=${SLEEP_TIME}
+    Log To Console  Panel s nepovinnými parametrami je zobrazený
+
+
+Extra Basic Data Work
+    Wait Until Element Is Visible  //input[@name='consumptionInTheCity']
+    Click Element Using JavaScript  //input[@name='consumptionInTheCity']
+    Log To Console  Klikám na input Spotreba v meste.
+    Input Text  //input[@name='consumptionInTheCity']  10
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Vpisujem spotrebu v meste.
+    #
+    Click Element Using JavaScript  //input[@name='consumptionOutOfTown']
+    Log To Console  Klikám na input Spotreba mimo mesta.
+    Input Text  //input[@name='consumptionOutOfTown']  8
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Vpisujem spotrebu mimo mesta.
+    #
+    Click Element Using JavaScript  //input[@name='consumptionCombined']
+    Log To Console  Klikám na input Spotreba kombinovaná.
+    Input Text  //input[@name='consumptionCombined']  8
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Vpisujem kombinovanú spotrebu.
+
+
+
+
+Click Safety And Stabilization Systems Work
+    Wait Until Element Is Visible    xpath=//button[contains(.,'Bezpečnosť a stabilizačné systémy')]
+    Scroll Element Into View    xpath=//button[contains(.,'Bezpečnosť a stabilizačné systémy')]
+    Click Element Using JavaScript  xpath=//button[contains(.,'Bezpečnosť a stabilizačné systémy')]
+    Log To Console  Klikám na Bezpečnosť a stabilizačné systémy.
+    # Čaká, kým sa panel "Bezpečnosť a stabilizačné systémy" rozbalí
+    Wait Until Element Is Visible  //div[contains(@class,'rounded-b-[16px]') and @data-headlessui-state='open']  timeout=${SLEEP_TIME}
+    Log To Console  Panel s Bezpečnosťou je rozbalený.
+    # Klik na skrytý input checkbox
+    Click Element Using JavaScript  //input[@name='airbag' and @type='checkbox' and contains(@class, 'hidden')]
+    Log To Console  Volím airbagy.
+    # Čaká, kým sa zobrazí tlačidlo listboxu
+    Wait Until Element Is Visible  //button[span[contains(.,'Vyberte typ')]]  timeout=${WAIT_TIMEOUT}
+    Log To Console  Rozbaľujem airbagy.
+    Click Element  //button[span[contains(.,'Vyberte typ')]]
+    Log To Console  Vyberám kolenné airbagy.
+    Wait Until Element Is Visible  //div[span[contains(.,'Airbag kolenný')]]
+    Click Element Using JavaScript  //div[contains(@class,'flex') and contains(.,'Airbag kolenný')]
+    Log To Console  Klikám kolenné airbagy.
+    Click Element Using JavaScript  xpath=//button[contains(.,'Bezpečnosť a stabilizačné systémy')]
+    Log To Console  Minimalizujem 1.sekciu
+
+Click Interier Work
+    Wait Until Element Is Visible    xpath=//button[contains(.,'Interiér')]
+    Log To Console  Klikám Interiér
+    Scroll Element Into View    xpath=//button[contains(.,'Interiér')]
+    Click Element Using JavaScript  xpath=//button[contains(.,'Interiér')]
+    Log To Console  Klikám na Interiér.
+    # Čaká, kým sa panel "Interiér" rozbalí
+    Wait Until Element Is Visible  //div[contains(@class,'rounded-b-[16px]') and @data-headlessui-state='open']  timeout=${SLEEP_TIME}
+    Log To Console  Panel s Interiérom je rozbalený.
+    # Klik na skrytý input checkbox
+    Click Element Using JavaScript  //input[@name='interier_heated_seats' and @type='checkbox' and contains(@class, 'hidden')]
+    Log To Console  Volím vyhrievané sedačky.
+    # Čaká, kým sa zobrazí tlačidlo listboxu
+    Wait Until Element Is Visible  //select[@name='interier_heated_seats_type']  timeout=${WAIT_TIMEOUT}
+    Log To Console  Rozbaľujem typ vyhrievaných sedačiek.
+    Click Element Using JavaScript  //select[@name='interier_heated_seats_type']
+    Log To Console  Vyberám si zo selektu sedačiek.
+    Wait Until Element Is Visible  //select[@name='interier_heated_seats_type']
+    Select From List By Label  //select[@name='interier_heated_seats_type']  Vyhrievané sedačky vpredu
+    Log To Console  Klikám vyhrievané sedačky.
+    Click Element Using JavaScript  xpath=//button[contains(.,'Interiér')]
+    Log To Console  Minimalizujem 2.sekciu
+
+Click Exterier Work
+    Wait Until Element Is Visible    xpath=//button[contains(.,'Exteriér')]
+    Scroll Element Into View    xpath=//button[contains(.,'Exteriér')]
+    Click Element Using JavaScript  xpath=//button[contains(.,'Exteriér')]
+    Log To Console  Panel s Exteriérom je rozbalený.
+    # Vyber LED svetlomety
+    Wait Until Element Is Visible  //div[contains(@class,'addition-field-input-checkbox') and contains(., 'LED svetlomety')]  timeout=${WAIT_TIMEOUT}
+    Log To Console  LED svetlomety sú dostupné.
+    Click Element Using JavaScript  //div[contains(@class,'addition-field-input-checkbox') and contains(., 'LED svetlomety')]
+    # Vyber ťažné zariadenie
+    Wait Until Element Is Visible  //div[contains(@class,'addition-field-input-checkbox') and contains(., 'Ťažné zariadenie')]  timeout=${WAIT_TIMEOUT}
+    Log To Console  Ťažné zariadenie je dostupné.
+    Click Element Using JavaScript  //div[contains(@class,'addition-field-input-checkbox') and contains(., 'Ťažné zariadenie')]
+    Log To Console  LED svetlomety a ťažné zariadenie sú selektnuté.
+    Click Element Using JavaScript  xpath=//button[contains(.,'Exteriér')]
+    Log To Console  Minimalizujem 3.sekciu
+
+Click Comfort And Multimedia Work
+    Wait Until Element Is Visible    xpath=//button[contains(.,'Komfort a multimédia')]
+    Log To Console  Klikám Komfort a multimédia
+    Scroll Element Into View    xpath=//button[contains(.,'Komfort a multimédia')]
+    Click Element Using JavaScript  xpath=//button[contains(.,'Komfort a multimédia')]
+    Log To Console  Klikám na Komfort a multimédia.
+    # Čaká, kým sa panel "Komfort a multimédia" rozbalí
+    Wait Until Element Is Visible  //div[contains(@class,'rounded-b-[16px]') and @data-headlessui-state='open']  timeout=${SLEEP_TIME}
+    Log To Console  Panel Komfort a multimédia je rozbalený.
+    # Klik na skrytý input checkbox
+    Click Element Using JavaScript  //input[@name='comfort_autoradio' and @type='checkbox' and contains(@class, 'hidden')]
+    Log To Console  Volím Autorádio.
+    # Čaká, kým sa zobrazí tlačidlo listboxu
+    Wait Until Element Is Visible  //select[@name='comfort_autoradio_type']  timeout=${WAIT_TIMEOUT}
+    Log To Console  Rozbaľujem typ autorádií.
+    Click Element Using JavaScript  //select[@name='comfort_autoradio_type']
+    Log To Console  Vyberám si zo selektu autorádií.
+    Wait Until Element Is Visible  //select[@name='comfort_autoradio_type']
+    Select From List By Label  //select[@name='comfort_autoradio_type']  Rádio + MP3
+    Log To Console  Klikám Rádio + MP3.
+    # Klik na skrytý input checkbox
+    Click Element Using JavaScript  //input[@name='comfort_air_conditioning' and @type='checkbox' and contains(@class, 'hidden')]
+    Log To Console  Volím Klimatizáciu.
+    # Čaká, kým sa zobrazí tlačidlo listboxu
+    Wait Until Element Is Visible  //select[@name='comfort_air_conditioning_type']  timeout=${WAIT_TIMEOUT}
+    Log To Console  Rozbaľujem typ klimatizácie.
+    Click Element Using JavaScript  //select[@name='comfort_air_conditioning_type']
+    Log To Console  Vyberám si zo selektu klimatizácií.
+    Wait Until Element Is Visible  //select[@name='comfort_air_conditioning_type']
+    Select From List By Label  //select[@name='comfort_air_conditioning_type']  Manuálna klimatizácia
+    Log To Console  Klikám Manuálna klimatizácia.
+    # Vyber Welcome light
+    Log To Console  Welcome light je dostupné.
+    Click Element Using JavaScript  //input[@name='comfort_welcome_light' and @type='checkbox' and contains(@class, 'hidden')]
+    Log To Console  Klikám Welcome light.
+    Click Element Using JavaScript  xpath=//button[contains(.,'Komfort a multimédia')]
+    Log To Console  Minimalizujem 4.sekciu
+
+Click Features and Assistance Services Work
+    Wait Until Element Is Visible    xpath=//button[contains(.,'Funkcie a asistenčné služby')]
+    Scroll Element Into View    xpath=//button[contains(.,'Funkcie a asistenčné služby')]
+    Click Element Using JavaScript  xpath=//button[contains(.,'Funkcie a asistenčné služby')]
+    Log To Console  Panel Funkcie a asistenčné služby je rozbalený.
+    # Vyber 4 parametre podla name
+    Click Element Using JavaScript  //input[@name='assistent_adaptive_cruise_control' and @type='checkbox' and contains(@class, 'hidden')]
+    Click Element Using JavaScript  //input[@name='assistent_remote_control_locking' and @type='checkbox' and contains(@class, 'hidden')]
+    Click Element Using JavaScript  //input[@name='assistent_rain_sensor' and @type='checkbox' and contains(@class, 'hidden')]
+    Click Element Using JavaScript  //input[@name='assistent_cruise_control' and @type='checkbox' and contains(@class, 'hidden')]
+    Log to console  Vyberám Adaptívny tempomat, Diaľkové otváranie kufra, Dažďový senzor a Tempomat
+    Click Element Using JavaScript  xpath=//button[contains(.,'Funkcie a asistenčné služby')]
+    Log To Console  Minimalizujem 5.sekciu
+
+Note Work
+    [Arguments]    ${textarea_name}    ${placeholder}    ${text}
+    Click Element Using JavaScript  //textarea[@name='${textarea_name}' and @placeholder='${placeholder}']
+    Input Text  //textarea[@name='${textarea_name}' and @placeholder='${placeholder}']    ${text}
+
+    #Click Element Using JavaScript  //textarea[@name='otherEquipment' and @placeholder='Napríklad: rok staré, možnosť odkúpenia auta, garážované a pod...']
+    #Log To Console  klikám
+    #Input Text  //textarea[@name='otherEquipment' and @placeholder='Napríklad: rok staré, možnosť odkúpenia auta, garážované a pod...']    ${RANDOM_TEXT}
+    #Log To Console  píšem
+
+Renaming Work
+    Wait Until Element Is Visible  //textarea[@name='title']
+    ${current_url}=    Get Location
+    Log To Console  Aktuálna URL je: ${current_url}
+    Click Element Using JavaScript  //textarea[@name='title']
+    Log To Console  Klikám na Nadpis.
+    Input Text  //textarea[@name='title']  ${RANDOM_NAME}
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Vkladám názov vozidla.
+
+Condition Work
+    Click Element Using JavaScript  //input[@name='boughtInSR' and @type='checkbox' and contains(@class, 'hidden')]
+    Click Element Using JavaScript  //input[@name='notDamaged' and @type='checkbox' and contains(@class, 'hidden')]
+    Click Element Using JavaScript  //input[@name='serviceBook' and @type='checkbox' and contains(@class, 'hidden')]
+    Click Element Using JavaScript  //input[@name='allServiceHistory' and @type='checkbox' and contains(@class, 'hidden')]
+    Log to console  Vyberám Ako nové, Nebúrané, Servisná knižka a Úplná servisná história.
 
 Price Part Work
-    Wait Until Page Is Fully Loaded Old
-    Click Next Button Desktop Work
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/stav
-    Wait Until Element Is Visible  //input[@type='number' and @name='price' and @id='normalPrice' and contains(@class, 'normalPrice')]
-    Log To Console  vpisujem cenu
-    Click Element Using JavaScript  //input[@type='number' and @name='price' and @id='normalPrice']
+    ${current_url}=    Get Location
+    Log To Console  Aktuálna URL je: ${current_url}
+    Wait Until Element Is Visible  //input[@name='price' and @placeholder='Zadajte sumu' and contains(@type, 'number')]
+    Click Element Using JavaScript  //input[@name='price' and @placeholder='Zadajte sumu' and contains(@type, 'number')]
     Log To Console  klik cena
-    Input Text  //input[@type='number' and @name='price' and @id='normalPrice']  ${PRICE}
+    Input Text  //input[@type='number' and @name='price']  ${PRICE}
     Log To Console  vpisujem cenu
     Sleep  ${SLEEP_TIME}
-    Click Next Button Desktop
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/cena
 

@@ -44,17 +44,13 @@ Run Test With Resolution
     Click Next Button Desktop Work
     Vehicle Equipment Work
     Click Next Button Desktop Work
-    Name And Condition Of The Vehicle
+    Name And Condition Of The Vehicle Work
     Click Next Button Desktop Work
     Price Part Work
     Click Next Button Desktop Work
     Upload An Image Work  ${image_path2}
-    Click Next Button Desktop Work
-
-    #tu som skoncila
-
-    Confirm Checkbox Add Ad
-    Check Adding Of Adv
+    Click Button Add An Advertisement Desktop Work
+    #tu dorob overenie v aktualnych inzeratoch, keď budú na nexte
     Sleep  ${SLEEP_TIME}
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
@@ -169,16 +165,6 @@ Upload An Image Work
     Log To Console  Nahratý obrázok.
 
 
-Confirm Checkbox Add Ad
-    Wait Until Page Is Fully Loaded Ecv Part
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/osobne-vozidla/kontakt
-    Scroll Down To Load Content 1 time
-    Click Element   id=contact-advertising-conditions
-    Log To Console  Potvrdzujem súhlas klienta
-    Click Button Add An Advertisement Desktop
-    Sleep  ${SLEEP_TIME}
-    Log To Console  Vytváram nový inzerát
-
 Change Checkbox Value
     [Arguments]  ${locator}
     Wait Until Element Is Visible  ${locator}
@@ -272,7 +258,7 @@ Vehicle Equipment Work
     Click Features and Assistance Services Work
     Note Work  ${textarea_name1}  ${placeholder1}  ${RANDOM_TEXT}
 
-Name And Condition Of The Vehicle
+Name And Condition Of The Vehicle Work
     [Documentation]  Názov a stav vozidla.
     Renaming Work
     Condition Work
@@ -522,3 +508,10 @@ Price Part Work
     Log To Console  vpisujem cenu
     Sleep  ${SLEEP_TIME}
 
+Click Button Add An Advertisement Desktop Work
+    ${current_url}=    Get Location
+    Log To Console  Aktuálna URL je: ${current_url}
+    Wait Until Element Is Visible  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT2}')]
+    Click Element Using JavaScript  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT2}')]
+    Log To Console  Klikám Pridať inzerát
+    Sleep  ${SLEEP_TIME}

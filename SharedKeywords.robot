@@ -384,6 +384,34 @@ Open Valid Link And Check Inner Links
         Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
     END
 
+Open Valid Link And Check Inner Links Without Checkbox
+    [Arguments]  ${url}
+    [Documentation]  Otvorí platný odkaz a skontroluje vnútorné odkazy.
+    Log To Console  Otváram odkaz: ${url}
+    Go To    ${url}
+    Wait Until Page Is Fully Loaded
+    Click Hidden Checkbox
+    ${image_a}=  Get WebElements  //div[contains(@class, 'mt-8') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5') and contains(@class, 'md:min-h-[192px]') and contains(@class, 'flex-row')]/a[1]
+    FOR  ${link}  IN  @{image_a}
+        ${href}=  Get Element Attribute  ${link}  href
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
+        Log To Console  ${status}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        Log To Console  status kód linku ${href} je ${status_code}
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
+    END
+
+Click Hidden Checkbox
+    Wait Until Page Contains Element  //label//span[contains(text(), 'Vozidlá zo všetkych pobočiek')]    timeout=${WAIT_TIMEOUT}
+    Wait Until Element Is Visible  //label//span[contains(text(), 'Vozidlá zo všetkych pobočiek')]
+    Click Element Using JavaScript  //label//span[contains(text(), 'Vozidlá zo všetkych pobočiek')]
+    Log To Console  Klikla som na skrytý checkbox.
+    Sleep  ${SLEEP_TIME}
+    Click Element Using JavaScript  //button//span[contains(text(), 'Zobraziť')]
+    Log To Console  Klikla som na Zobraziť.
+    Sleep  ${SLEEP_TIME}
+
 Get All Links In Element
     [Arguments]  ${element_xpath}
     ${elements}=  Get WebElements  ${element_xpath}//a

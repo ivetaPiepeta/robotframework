@@ -22,8 +22,9 @@ ${PAGINATOR_WRAPPER_SELLER}  //div[@class="float-none mx-0 my-0"]
 ${BUTTON_TEXT_SHOW}  //button[contains(., 'Zobraziť')]
 ${TEXT_LOCATOR}  //div[@class='mr-[100px] font-semibold lowercase text-[rgba(235,235,245,.6)] xs:mr-1']
 
-${CALCULATOR_LOCATOR}  //div[@id='calculator']
-${URL_detailu}  https://www.autobazar.eu/detail-nove-auto/
+${CALCULATOR_LOCATOR}  //div[@class='relative space-y-4']/div[@id='calculator' and contains(@class, 'absolute')]
+${URL_detail}  https://www.autobazar.eu/detail/
+${URL_detail_new}  https://www.autobazar.eu/detail-nove-auto/
 
 *** Test Cases ***
 Seller check
@@ -43,13 +44,10 @@ Seller check
     Wait Until Page Is Fully Loaded
     Scroll Down To Load All Content
     @{hrefs}  Get Every Page Hrefs
-    Log To Console  Got all pafe hrefs.
     @{hrefs}  Remove Duplicates From Listtt  @{hrefs}
-    Log To Console  Dupl.removed.
     Log Totall Links Found  @{hrefs}
-    Log To console  Found
     ${filtered_hrefs}=  Filter Links With Calculator  @{hrefs}
-    Log To Console  Hladam chybku
+    Log To Console  Filter Links With Calculator?
     Check Links Calculator Presence  @{filtered_hrefs}
 
 *** Keywords ***
@@ -81,7 +79,7 @@ Filter Links With Calculator
     Log To Console  Vyfiltrovaný zoznam in progress.
     ${filtered_hrefs}=  Create List
     FOR  ${href}  IN  @{hrefs}
-        Run Keyword If  '${href}'.startswith('${URL_detailu}')  Append To List  ${filtered_hrefs}  ${href}
+        Run Keyword If  '${href}'.startswith('${URL_detail}') or '${href}'.startswith('${URL_detail_new}')  Append To List  ${filtered_hrefs}  ${href}
     END
     RETURN  ${filtered_hrefs}
     Log To Console  Mám hotový zoznam detailov inzerátov.
@@ -89,23 +87,37 @@ Filter Links With Calculator
 Check Links Calculator Presence
     [Documentation]  Otvorí každý zo získaných url a overí prítomnosť kalkulačky
     [Arguments]  @{filtered_hrefs}
+    ${window_handles}=  Get Window Handles
+    ${original_handle}=  Set Variable  ${window_handles}[0]
     FOR    ${href}  IN  @{filtered_hrefs}
         Open New Tab In Existing Browser  ${href}
         Sleep  ${SLEEP_TIME}
-        ${is_present}=  Run Keyword And Return Status  Element Should Be Visible  ${CALCULATOR_LOCATOR}
+        Wait Until Page Is Fully Loaded
+        Scroll Down To Load Content 1 time
+        ${is_present}=  Run Keyword And Return Status  Check For Calculator
         Log To Console  Kalkulačka prítomná na ${href}: ${is_present}
-        Close Current Tab
+        Close Current Tab And Switch Back  ${original_handle}
+        Log To Console  cyklus FOR
     END
 
 Open New Tab In Existing Browser
     [Arguments]  ${url}
-    Log To Console  test
-    Execute JavaScript    window.open("${url}","_blank");
-    Switch Window  NEW
+    Execute JavaScript  window.open("${url}","_blank")
+    ${handles}=  Get Window Handles
+    Switch Window  ${handles}[-1]
+    Log To Console  Open New Tab In Existing Browser
 
-Close Current Tab
+Close Current Tab And Switch Back
     [Documentation]  Close the current browser tab and return to the previous one
-    Log To Console  test2
+    [Arguments]  ${original_handle}
     Close Window
-    Log To Console  test3
-    Switch Window  FIRST
+    Switch Window  ${original_handle}
+    Log To Console  Close Current Tab And Switch Back
+
+Check For Calculator
+    [Arguments]  ${CALCULATOR_LOCATOR}
+    Log To Console  Overujem prítomnosť kalkulačky na stránke.
+    Run Keyword And Ignore Error  Wait Until Page Contains Element  ${CALCULATOR_LOCATOR}  10s
+    ${result}=  Run Keyword And Return Status  Element Should Be Visible  ${CALCULATOR_LOCATOR}
+    RETURN  ${result}
+    Log To Console  Check For Calculator

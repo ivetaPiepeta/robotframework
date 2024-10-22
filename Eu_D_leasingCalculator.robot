@@ -22,7 +22,7 @@ ${PAGINATOR_WRAPPER_SELLER}  //div[@class="float-none mx-0 my-0"]
 ${BUTTON_TEXT_SHOW}  //button[contains(., 'Zobraziť')]
 ${TEXT_LOCATOR}  //div[@class='mr-[100px] font-semibold lowercase text-[rgba(235,235,245,.6)] xs:mr-1']
 
-${CALCULATOR_LOCATOR}  //div[@class='relative space-y-4']/div[@id='calculator' and contains(@class, 'absolute')]
+${CALCULATOR_LOCATOR}  //div[@class='relative space-y-4']/div[@id='calculator' and contains(@class, 'absolute -top-[90px]')]
 ${URL_detail}  https://www.autobazar.eu/detail/
 ${URL_detail_new}  https://www.autobazar.eu/detail-nove-auto/
 
@@ -95,6 +95,7 @@ Check Links Calculator Presence
         Wait Until Page Is Fully Loaded
         Scroll Down To Load Content 1 time
         ${is_present}=  Run Keyword And Return Status  Check For Calculator
+        Sleep  ${SLEEP_TIME}
         Log To Console  Kalkulačka prítomná na ${href}: ${is_present}
         Close Current Tab And Switch Back  ${original_handle}
         Log To Console  cyklus FOR

@@ -42,13 +42,110 @@ Seller Links Check
     [Documentation]  Tento test otvorí prehliadač, načíta stránku predajcov aut, overí HTTP status kód každého inzerátu kliknutím na obrázok.
     Disable Insecure Request Warnings
     FOR  ${url}  IN  @{Valid_Links}
-        Open Valid Link And Check Inner Links Without Checkbox  ${url}
+        Open Valid Link And Check Inner Links Without Checkbox non  ${url}
     END
     Navigate ThroughPages Until Last Span
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
 
 *** Keywords ***
+
+Open Valid Link And Check Inner Links Without Checkbox non
+    [Arguments]  ${url}
+    [Documentation]  Otvára platný odkaz a skontroluje vnútorné odkazy.
+    Log To Console  Otváram odkaz: ${url}
+    Go To  ${url}
+    Wait Until Page Is Fully Loaded
+    Click Hidden Checkbox
+    Log To Console  Click Checkbox
+
+    # Overiť, či sú prvky prítomné
+    ${has_elements}=  Run Keyword And Return Status  Wait Until Element Is Visible  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-50')]/a  10s
+    Run Keyword If  ${has_elements}  Log To Console  Links are visible on the page
+    Run Keyword If  not ${has_elements}  Log To Console  ERROR: No links found with the specified XPath
+
+    ${image_a}=  Get WebElements  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-50')]/a
+    ${image_a_count}=  Get Length  ${image_a}
+    Log To Console  Number of links found: ${image_a_count}
+
+    FOR  ${link}  IN  @{image_a}
+        ${href}=  Get Element Attribute  ${link}  href
+        Log To Console  Checking status for link: ${href}
+
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
+        ${status_passed}=  Set Variable  ${status}[0]
+        ${status_code}=  Set Variable  ${status}[1]
+
+        # Kontrola pre úspech RUNNING status pre keyword
+        Run Keyword And Continue On Failure  Should Be Equal  ${status_passed}  PASS
+
+        # Alternatívna kontrola hodnôt
+        ${status_code}=  Set Variable If  '${status_passed}' == 'FAIL'  -1  ${status_code}
+
+        Log To Console  Status code for link ${href} is ${status_code}
+
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link Client  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link Client  ${href}  ${status_code}
+    END
+
+Open Valid Link And Check Inner Links Without Checkbox non old
+    [Arguments]  ${url}
+    [Documentation]  Otvára platný odkaz a skontroluje vnútorné odkazy.
+    Log To Console  Otváram odkaz: ${url}
+    Go To  ${url}
+    Wait Until Page Is Fully Loaded
+    Click Hidden Checkbox
+    Log To Console  Click Checkbox
+
+    # Overiť, či sú prvky prítomné
+    ${has_elements}=  Run Keyword And Return Status  Wait Until Element Is Visible  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-50')]/a  10s
+    Run Keyword If  ${has_elements}  Log To Console  Links are visible on the page
+    Run Keyword If  not ${has_elements}  Log To Console  ERROR: No links found with the specified XPath
+
+    ${image_a}=  Get WebElements  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-50')]/a
+    ${image_a_count}=  Get Length  ${image_a}
+    Log To Console  Number of links found: ${image_a_count}
+
+    FOR  ${link}  IN  @{image_a}
+        ${href}=  Get Element Attribute  ${link}  href
+        Log To Console  Checking status for link: ${href}
+
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
+        ${status_passed}=  Set Variable  ${status}[0]
+        ${status_code}=  Set Variable  ${status}[1]
+
+        # Pokračuj na chybu na show ak sa expected nezhoduje
+        Run Keyword And Continue On Failure  Should Be Equal  ${status_passed}  PASS
+
+        # Kontrola ak je premenna spravne definovana
+        ${is_status_code_defined}=  Evaluate  '${status_code}' if 'status_code' in locals() else 'undefined'
+        Run Keyword If  '${is_status_code_defined}' == 'undefined'  Set Variable  ${status_code}  -1
+
+        Run Keyword If  '${status_passed}' == 'FAIL'  Log To Console  Status check failed for link: ${href} with status: ${status_code}
+        Run Keyword If  '${status_passed}' == 'FAIL'  Set Variable  ${status_code}  -1
+
+        Log To Console  Status code for link ${href} is ${status_code}
+
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link Client  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link Client  ${href}  ${status_code}
+    END
+
+Log Valid Link Client
+    [Arguments]  ${href}
+    Log To Console  Valid link: ${href}
+
+Log Broken Link Client
+    [Arguments]  ${href}  ${status_code}
+    Log To Console  Broken link: ${href}, status code: ${status_code}
+
+Log Totall Links Found
+    [Arguments]  @{hrefs}
+    ${num_links}  Evaluate  len(${hrefs})
+    Log To Console  Total links found: ${num_links}
+    FOR  ${href}  IN  @{hrefs}
+        Log To Console  ${href}
+    END
+
 Navigate ThroughPages Until Last Span
     ${last_page}=  Get Variable Value  ${False}
     WHILE  '${last_page}' == '${False}'
@@ -84,7 +181,7 @@ Click Element Using JavaScript
 Input Search Term And Click Button
     [Arguments]  ${term}
     Input Text  //input[@type='search' and @placeholder='Napíšte hľadaný výraz']  ${term}
-    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'mt-5 w-full space-x-2 rounded-lg bg-[#0071e3] px-[15px] py-[14px] font-semibold disabled:bg-[#0071e3]/80 disabled:text-white/80 lg:w-[170px]')]
+    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'mt-5 w-full space-x-2 rounded-lg bg-[#0071e3] px-[15px] py-[14px] font-semibold disabled:cursor-not-allowed disabled:bg-[#0071e3]/80 disabled:text-white/80 lg:w-[170px]')]
 
 Get All Links
     [Documentation]  Získaj všetky odkazy (a-href) z prvkov s triedou `flex flex-wrap justify-between gap-2`.

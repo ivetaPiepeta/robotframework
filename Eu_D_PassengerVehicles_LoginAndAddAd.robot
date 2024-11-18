@@ -116,8 +116,15 @@ Should Ignore Href
 
 Add A New Advertisiment Desktop
     Wait Until Page Is Fully Loaded
-    Wait Until Element Is Visible  //a[@href='https://www.autobazar.eu/sk/pridat-inzerat' and contains(., 'Pridať inzerát')]
-    Click Element Using JavaScript  //a[@href='https://www.autobazar.eu/sk/pridat-inzerat' and contains(., 'Pridať inzerát')]
+ # Počkať, kým je prvok viditeľný
+    Wait Until Element Is Visible  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']  timeout=15s
+
+    # Skontrolovať jeho prítomnosť na stránke
+    Element Should Be Visible  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']
+
+    # Kliknutie na prvok
+    Click Element  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']
+
     Wait Until Element Is Visible  //a[@href='${ADD_AD_URL}' and contains(@class, '${ADD_AD_CLASS}')][1]
     Sleep  1s
     Click Element Using JavaScript  //a[@href='${ADD_AD_URL}' and contains(@class, '${ADD_AD_CLASS}')][1]

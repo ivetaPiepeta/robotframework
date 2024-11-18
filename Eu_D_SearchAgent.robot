@@ -51,10 +51,12 @@ Using A Filter HP For Search Agent
     Log To Console  Počet inzerátov bez filtra: ${button_text_show}
     Select Brand From Dropdown And Close Listbox  Škoda
     Click At Coordinates  100  100
+    Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov so značkou: ${button_text_show}
     Select Model From Dropdown And Close Listbox  Octavia
     Click At Coordinates  100  100
+    Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov s modelom: ${button_text_show}
     Sleep  ${SLEEP_TIME}

@@ -22,7 +22,7 @@ ${URL_AProka}  https://www.autopredajcaroka.eu/
 ${URL_documents}  https://www.autobazar.eu/dokumenty
 ${URL_tests}  https://www.autobazar.eu/testy-aut/
 ${URL_prices}  https://www.autobazar.eu/ceny-aut/
-${URL_advertisiment}  https://www.autobazar.eu/detail/bmw-rad-7-nemazat-tento-inzerat/31565154/
+${URL_advertisiment}  https://www.autobazar.eu/detail/skoda-octavia-16-tdi-cr-dpf-greentec-ambition/Amrf2t3om8o/
 ${URL_podcast}  https://magazin.autobazar.eu/podcasty
 ${URL_myaccount}  https://autobazar.eu/moje-konto/
 ${URL_myfavorite}  https://autobazar.eu/moje-konto/oblubene/
@@ -64,6 +64,7 @@ ${KM}  10000
 ${PRICE}  30000
 ${KM2}  10000
 ${KM3}  100000
+${KM4}  150000
 ${PRICE2}  2500
 ${PRICE_FROM}  13000
 ${PRICE_TO}  25000
@@ -126,6 +127,17 @@ GetAllPageHrefs
         Run Keyword If  '${should_ignore}' == 'False'  Append To List  ${All_links}  ${href}
     END
 
+Get Every Page Hrefs
+    [Documentation]  Získa všetky odkazy zo stránky
+    Log To Console  získavam linky
+    ${hrefs}  Create List
+    ${links}  Get WebElements  //a[@href]
+    FOR  ${link}  IN  @{links}
+        ${href}  Get Element Attribute  ${link}  href
+        Append To List  ${hrefs}  ${href}
+    END
+    RETURN  ${hrefs}
+
 Remove Duplicates From List
     [Documentation]  Odstráni duplicity zo zoznamu odkazov.
     ${unique_links}=  Remove Duplicates  ${All_links}
@@ -135,6 +147,12 @@ Remove Duplicates From Listt
     [Documentation]  Odstráni duplicity zo zoznamu odkazov.
     ${unique_links}=  Remove Duplicates  ${Links}
     Set Global Variable  ${Links}  ${unique_links}
+
+Remove Duplicates From Listtt
+    [Arguments]  @{list}
+    Log To Console  Odstraňujem duplicity zo zoznamu.
+    ${unique_list}  Evaluate  list(set(${list}))
+    RETURN  ${unique_list}
 
 Scroll Down To Load All Content
     ${height}=  Execute JavaScript  return document.body.scrollHeight
@@ -227,6 +245,15 @@ Check Single Href Status
     ${response}=  GET On Session  autobazar  ${page}
     Log  HTTP status kód pre ${page} je: ${response.status_code}
     RETURN  ${response.status_code}
+
+Check Single Href Status Client
+    [Arguments]  ${page}
+    [Documentation]  Check status code for a single href.
+    Disable Insecure Request Warnings
+    Create Session  session  ${href}
+    ${response}=  GET On Session  session  ${href}
+    Log  HTTP status kód pre ${page} je: ${response.status_code}
+    RETURN  PASS  ${response.status_code}
 
 Should Ignore Href
     [Arguments]  ${href}
@@ -325,7 +352,7 @@ Navigate ThroughPages Until Last Span
 Input Search Term And Click Button
     [Arguments]  ${term}
     Input Text  //input[@type='search' and @placeholder='Napíšte hľadaný výraz']  ${term}
-    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'mt-5 w-full space-x-2 rounded-lg bg-[#0071e3] px-[15px] py-[14px] font-semibold disabled:bg-[#0071e3]/80 disabled:text-white/80 lg:w-[170px]')]
+    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'mt-5 w-full space-x-2 rounded-lg bg-[#0071e3] px-[15px] py-[14px] font-semibold disabled:cursor-not-allowed disabled:bg-[#0071e3]/80 disabled:text-white/80 lg:w-[170px]')]
 
 Get All Links
     [Documentation]  Získaj všetky odkazy (a-href) z prvkov s triedou `flex flex-wrap justify-between gap-2`.
@@ -391,7 +418,10 @@ Open Valid Link And Check Inner Links Without Checkbox
     Go To    ${url}
     Wait Until Page Is Fully Loaded
     Click Hidden Checkbox
-    ${image_a}=  Get WebElements  //div[contains(@class, 'mt-8') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5') and contains(@class, 'md:min-h-[192px]') and contains(@class, 'flex-row')]/a[1]
+    Log To Console  Click Checkbox
+    ${image_a}=  Get WebElements  //div[contains(@class, 'mt-8') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5') and contains(@class, 'md:min-h-[192px]') and contains(@class, 'sm:flex-row')]/a[1]
+    ${image_a_count}=  Get Length  ${image_a}
+    Log To Console  Number of links found: ${image_a_count}
     FOR  ${link}  IN  @{image_a}
         ${href}=  Get Element Attribute  ${link}  href
         ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
@@ -500,8 +530,14 @@ Input Text Slowly
 
 Add A New Advertisiment Desktop
     Wait Until Page Is Fully Loaded
-    Wait Until Element Is Visible  //a[@href='https://www.autobazar.eu/sk/pridat-inzerat' and contains(., 'Pridať inzerát')]
-    Click Element Using JavaScript  //a[@href='https://www.autobazar.eu/sk/pridat-inzerat' and contains(., 'Pridať inzerát')]
+     # Počkať, kým je prvok viditeľný
+    Wait Until Element Is Visible  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']  timeout=15s
+
+    # Skontrolovať jeho prítomnosť na stránke
+    Element Should Be Visible  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']
+
+    # Kliknutie na prvok
+    Click Element  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']
     Wait Until Element Is Visible  //a[@href='${ADD_AD_URL}' and contains(@class, '${ADD_AD_CLASS}')][1]
     Sleep  1s
     Click Element Using JavaScript  //a[@href='${ADD_AD_URL}' and contains(@class, '${ADD_AD_CLASS}')][1]
@@ -631,8 +667,14 @@ Add Ecv
 
 Add With No Ecv Desktop
     Wait Until Page Is Fully Loaded Ecv Part
-    Wait Until Element Is Visible  //a[@href='https://www.autobazar.eu/sk/pridat-inzerat' and contains(., 'Pridať inzerát')]
-    Click Element Using JavaScript  //a[@href='https://www.autobazar.eu/sk/pridat-inzerat' and contains(., 'Pridať inzerát')]
+     # Počkať, kým je prvok viditeľný
+    Wait Until Element Is Visible  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']  timeout=15s
+
+    # Skontrolovať jeho prítomnosť na stránke
+    Element Should Be Visible  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']
+
+    # Kliknutie na prvok
+    Click Element  //div[@class='flex']/a[@href='https://www.autobazar.eu/pridat-inzerat/']
     Log To Console  Pridávam inzerát - výber kategórie
     Wait Until Element Is Visible  ${ADD_AD_LINK}
     Click Element Using JavaScript  ${ADD_AD_LINK}
@@ -786,6 +828,17 @@ Input Value Km Into Dropdown
     Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Vyhľadávam kilometre: ${button_text_show}
+    Sleep  ${SLEEP_TIME}
+
+Input Value To Km Into Dropdown
+    [Arguments]  ${km}
+    ${option_value}=  Set Variable  ${km}
+    Wait Until Element Is Visible  //input[@name='mileageTo']
+    Click Element Using JavaScript  //input[@name='mileageTo']
+    Input Text  //input[@name='mileageTo']  ${km}
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadávam kilometre do: ${button_text_show}
     Sleep  ${SLEEP_TIME}
 
 Wait For Element And Compare Values

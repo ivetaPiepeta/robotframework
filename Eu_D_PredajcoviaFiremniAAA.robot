@@ -1,58 +1,77 @@
 *** Settings ***
-Library  SeleniumLibrary
-Library  RequestsLibrary
-Library  Collections
-Library  BuiltIn
-Library  OperatingSystem
-Library  String
 Resource  SharedKeywords.robot
 Library    helper.py
 
 *** Variables ***
+${Sub_URL}  predajcovia-aut/
 @{Links}    # Tento zoznam bude obsahovať všetky odkazy (href)
 @{Broken_Links}
 @{Valid_Links}  # Tento zoznam bude obsahovať všetky odkazy s statusom 200
 ${TOTAL_LINKS}  0
 ${REMAINING_LINKS}  0
 ${SLEEP_TIME}  2s
+@{Search_Terms}  AAA
 @{Paginator_Links}
 ${NEXT_BUTTON_XPATH}  //a[contains(@class, 'cursor-pointer') and contains(text(), 'Ďalší predajcovia')]
 ${PAGINATOR_WRAPPER_SELLER}  //div[@class="float-none mx-0 my-0"]
-${checkbox_id}  paramonlyWithVideo
-${variable_text}  Len ponuky s videom
 
 *** Test Cases ***
 Seller check
-    [Documentation]  Tento test otvorí prehliadač, načíta Home page, overí HTTP status kód, vyplní a potvrdí hlavný filter o parameter len inzeráty s videom
+    [Documentation]  Tento test otvorí prehliadač, načíta stránku predajcov aut, overí HTTP status kód, odklikne consent popup a vyplní text do vyhľadávacieho políčka.
     Disable Insecure Request Warnings
-    Create Session  video  ${Base_URL}  verify=False
-    ${response}  GET On Session  video  /
+    Create Session  predajcovia_aut  ${Base_URL}${Sub_URL}  verify=False
+    ${response}  GET On Session  predajcovia_aut  /
     Should Be Equal As Numbers  ${response.status_code}  200
-    Open Browser  ${Base_URL}  chrome
+    Open Browser  ${Base_URL}${Sub_URL}  chrome
     Maximize Browser Window
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Scroll Down To Load Content 2 times
-    Click Advanced Search Button
-    Sleep  ${SLEEP_TIME}
-    Click Checkbox  ${checkbox_id}
-    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'button-search disabled:cursor-not-allowed disabled:bg-[#0a84ff]/50')]
-    Get All Links And Check Status For All Pages
+    FOR  ${term}  IN  @{Search_Terms}
+        Log To Console  Searching for: ${term}
+        Wait Until Page Is Fully Loaded
+        Sleep  ${SLEEP_TIME}
+        Input Search Term And Click Button  ${term}
+        Sleep  ${SLEEP_TIME}
+        Wait Until Page Is Fully Loaded
+        Get All Links And Check Status For All Pages
+    END
     Fail Test If Broken Links Exist
     Log All Valid Links
 
 Seller Links Check
-    [Documentation]  Tento test otvorí prehliadač, načíta stránku predajcov aut, overí HTTP status kód každého inzerátu kliknutím na obrázok.
+    [Documentation]  Tento test otvorí prehliadač, načíta stránku predajcu aut, overí HTTP status kód každého inzerátu kliknutím na kartičku inzerátu.
     Disable Insecure Request Warnings
     FOR  ${url}  IN  @{Valid_Links}
-        Open Valid Link And Check Inner Links  ${url}
-        Check Video In Listing
+        Open Valid Link And Check Inner Links Without Checkbox  ${url}
     END
     Navigate ThroughPages Until Last Span
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
 
 *** Keywords ***
+Open Valid Link And Check Inner Links Without Checkbox
+    [Arguments]  ${url}
+    [Documentation]  Otvorí platný odkaz a skontroluje vnútorné odkazy.
+    Log To Console  Otváram odkaz: ${url}
+    Go To    ${url}
+    Wait Until Page Is Fully Loaded
+    Click Hidden Checkbox
+    Log To Console  Click Checkbox
+
+
+    ${image_a}=  Get WebElements  //div[contains(@class, 'mt-8') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5') and contains(@class, 'md:min-h-[192px]') and contains(@class, 'sm:flex-row')]/a[1]
+    ${image_a_count}=  Get Length  ${image_a}
+    Log To Console  Number of links found: ${image_a_count}
+    FOR  ${link}  IN  @{image_a}
+        ${href}=  Get Element Attribute  ${link}  href
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
+        Log To Console  ${status}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        Log To Console  status kód linku ${href} je ${status_code}
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
+    END
+
 Navigate ThroughPages Until Last Span
     ${last_page}=  Get Variable Value  ${False}
     WHILE  '${last_page}' == '${False}'
@@ -87,8 +106,8 @@ Click Element Using JavaScript
 
 Input Search Term And Click Button
     [Arguments]  ${term}
-    Input Text  //input[@type='text' and @placeholder='Kľúčové slovo']  ${term}
-    Wait Until Loader Disappears And Click Button  //button[contains(., 'Zobraziť')]
+    Input Text  //input[@type='search' and @placeholder='Napíšte hľadaný výraz']  ${term}
+    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'mt-5 w-full space-x-2 rounded-lg bg-[#0071e3] px-[15px] py-[14px] font-semibold disabled:cursor-not-allowed disabled:bg-[#0071e3]/80 disabled:text-white/80 lg:w-[170px]')]
 
 Get All Links
     [Documentation]  Získaj všetky odkazy (a-href) z prvkov s triedou `flex flex-wrap justify-between gap-2`.
@@ -121,10 +140,25 @@ CheckHrefsStatus
     END
     Set Variable  @{Links}  @{EMPTY}
 
+CheckPhotos
+    [Documentation]  Skontroluje stav všetkých odkazov, otvorí, načíta, nájde....
+    ${total_links}=  Get Length  ${Links}
+    Set Global Variable  ${TOTAL_LINKS}  ${total_links}
+    Set Global Variable  ${REMAINING_LINKS}  ${total_links}
+    FOR  ${page}  IN  @{Links}
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${page}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${page}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${page}  ${status_code}
+        ${REMAINING_LINKS}=  Evaluate  ${REMAINING_LINKS} - 1
+        Log To Console  ${REMAINING_LINKS}/${TOTAL_LINKS} ${page}  no new line=True
+    END
+    Set Variable  @{Links}  @{EMPTY}
+
 Check Single Href Status
     [Arguments]  ${page}
     Disable Insecure Request Warnings
-    ${response}=  GET On Session  video  ${page}
+    ${response}=  GET On Session  predajcovia_aut  ${page}
     Log  HTTP status kód pre ${page} je: ${response.status_code}
     RETURN  ${response.status_code}
 
@@ -165,77 +199,3 @@ Get All Links And Check Status For All Pages
         Wait Until Page Is Fully Loaded
     END
 
-Open Valid Link And Check Inner Links
-    [Arguments]  ${url}
-    [Documentation]  Otvorí platný odkaz a skontroluje vnútorné odkazy.
-    Log To Console  Otváram odkaz: ${url}
-    Go To    ${url}
-    Wait Until Page Is Fully Loaded
-    # Overiť, či sú prvky prítomné
-    ${has_elements}=  Run Keyword And Return Status  Wait Until Element Is Visible  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-50')]/a  10s
-    Run Keyword If  ${has_elements}  Log To Console  Links are visible on the page
-    Run Keyword If  not ${has_elements}  Log To Console  ERROR: No links found with the specified XPath
-
-    ${image_a}=  Get WebElements  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-50')]/a
-    ${image_a_count}=  Get Length  ${image_a}
-    Log To Console  Number of links found: ${image_a_count}
-
-    FOR  ${link}  IN  @{image_a}
-        ${href}=  Get Element Attribute  ${link}  href
-        Log To Console  Checking status for link: ${href}
-
-        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
-        ${status_passed}=  Set Variable  ${status}[0]
-        ${status_code}=  Set Variable  ${status}[1]
-
-        # Kontrola pre úspech RUNNING status pre keyword
-        Run Keyword And Continue On Failure  Should Be Equal  ${status_passed}  PASS
-
-        # Alternatívna kontrola hodnôt
-        ${status_code}=  Set Variable If  '${status_passed}' == 'FAIL'  -1  ${status_code}
-
-        Log To Console  Status code for link ${href} is ${status_code}
-
-        Run Keyword If  '${status_code}' == '200'  Log Valid Link Client  ${href}
-        Run Keyword If  '${status_code}' != '200'  Log Broken Link Client  ${href}  ${status_code}
-    END
-
-Log Valid Link Client
-    [Arguments]  ${href}
-    Log To Console  Valid link: ${href}
-
-Log Broken Link Client
-    [Arguments]  ${href}  ${status_code}
-    Log To Console  Broken link: ${href}, status code: ${status_code}
-
-Log Totall Links Found
-    [Arguments]  @{hrefs}
-    ${num_links}  Evaluate  len(${hrefs})
-    Log To Console  Total links found: ${num_links}
-    FOR  ${href}  IN  @{hrefs}
-        Log To Console  ${href}
-    END
-
-
-Click Advanced Search Button
-    [Arguments]    ${index}=0
-    Wait Until Page Contains Element    //button[contains(text(), 'Rozšírené vyhľadávanie')]
-    ${buttons}=    Get WebElements    //button[contains(text(), 'Rozšírené vyhľadávanie')]
-    Click Element    ${buttons[${index}]}
-
-Click Checkbox
-    [Arguments]    ${checkbox_id}
-    ${xpath}=    Set Variable    //input[contains(@id, '${checkbox_id}')]
-    Execute JavaScript    var element = document.evaluate("${xpath}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; element.click();
-
-Check Video In Listing
-    [Documentation]  Overí, že video v inzeráte funguje.
-    ${video_span}=  Get WebElements  //span[contains(text(), 'Video')]
-    Run Keyword If  ${len(${video_span})} > 0  Click Element  ${video_span[0]}
-    Sleep  ${SLEEP_TIME}
-    ${video_url}=  Get Location
-    ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${video_url}
-    ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
-    Log To Console  status kód linku ${video_url} je ${status_code}
-    Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${video_url}
-    Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${video_url}  ${status_code}

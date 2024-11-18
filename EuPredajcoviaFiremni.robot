@@ -1,10 +1,4 @@
 *** Settings ***
-Library  SeleniumLibrary
-Library  RequestsLibrary
-Library  Collections
-Library  BuiltIn
-Library  OperatingSystem
-Library  String
 Resource  SharedKeywords.robot
 Library    helper.py
 
@@ -90,7 +84,7 @@ Click Element Using JavaScript
 Input Search Term And Click Button
     [Arguments]  ${term}
     Input Text  //input[@type='search' and @placeholder='Napíšte hľadaný výraz']  ${term}
-    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'mt-5 w-full space-x-2 rounded-lg bg-[#0071e3] px-[15px] py-[14px] font-semibold disabled:bg-[#0071e3]/80 disabled:text-white/80 lg:w-[170px]')]
+    Wait Until Loader Disappears And Click Button  //button[contains(@class, 'mt-5 w-full space-x-2 rounded-lg bg-[#0071e3] px-[15px] py-[14px] font-semibold disabled:cursor-not-allowed disabled:bg-[#0071e3]/80 disabled:text-white/80 lg:w-[170px]')]
 
 Get All Links
     [Documentation]  Získaj všetky odkazy (a-href) z prvkov s triedou `flex flex-wrap justify-between gap-2`.

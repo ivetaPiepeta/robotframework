@@ -250,10 +250,20 @@ Perform Login Desktop Mobile
     Sleep  ${SLEEP_TIME}
     Click Element Using JavaScript  (//button[contains(@class, 'block') and contains(@class, 'h-full') and contains(@class, 'w-[20%]') and contains(@class, 'cursor-pointer') and contains(@class, 'text-center') and contains(@class, 'text-[10px]') and contains(@class, 'font-semibold') and contains(@class, 'leading-[1.2]')])[1]
     Capture Page Screenshot  after_click.png
-    Log To Console  bohajeho
-    Click Element Using JavaScript  xpath=//input[@placeholder='Meno, email alebo tel. číslo']
-    Log To Console  klikam
-    Input Text  xpath=//input[@placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
-    Input Text  xpath=//input[@placeholder='Heslo']  ${PASSWORD}
+    Log To Console  klikam na input meno
+
+    Wait Until Element Is Visible  xpath=//input[@type='text' and @autocomplete='username' and @value='']
+    Log To Console  čakám
+    Execute JavaScript    document.querySelector("input[autocomplete='username']").focus()
+    Click Element Using JavaScript  xpath=//input[@type='text' and @autocomplete='username' and @value='']
+    Execute JavaScript    document.querySelector("input[autocomplete='username']").value = "${USERNAME}"
+    Log To Console  pisem meno
+    Input Text  xpath=//input[@type='text' and @autocomplete='username']  ${USERNAME}
+    Log To Console  klikam na input heslo
+    Click Element Using JavaScript  xpath=//input[@placeholder='Heslo']
+    Log To Console  pisem heslo
+    Input Text  xpath=//input[@placeholder='Heslo']    ${PASSWORD}
+    Log To Console  prihlasujem sa
     Click Element  xpath=//button[contains(., 'Prihlásiť sa')]
+    Capture Page Screenshot  after_login.png
     Sleep  1s

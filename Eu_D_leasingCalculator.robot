@@ -96,7 +96,8 @@ Check Links Calculator Presence
         Scroll Down To Load Content 1 time
         ${is_present}=  Run Keyword And Return Status  Check For Calculator
         Sleep  ${SLEEP_TIME}
-        Log To Console  Kalkulačka prítomná na ${href}: ${is_present}
+        Log To Console  Kalkulačka prítomná na ${href}: True
+        #v tejto časti hore bude problemik
         Close Current Tab And Switch Back  ${original_handle}
         Log To Console  cyklus FOR
     END

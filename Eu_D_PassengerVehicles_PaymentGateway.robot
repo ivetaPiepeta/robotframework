@@ -16,9 +16,9 @@ ${ADD_AD_URL}        /pridat-inzerat/osobne-vozidla/zakladne-udaje
 ${ADD_AD_CLASS}      item
 ${ADD_AD_DIV_CLASS}  bg-icon
 ${XPATH_INPUT}  //input[@type='text' and @name='VIN' and @id='vindiv']
-${XPATH_GATE}  //div[@class='p-package swiper-slide']//form[@id='overenaklasikaForm']
-${XPATH_PAY_OPTIONS}  //a[@class='payment-options' and @data-toggle-payment-options='packagemodal1' and text()='Ďalšie možnosti platby']
-${XPATH_TRUSTPAY}  //div[@class='option']//button[@class='btn btn-card' and contains(text(), 'Zaplatiť kartou')]
+${XPATH_GATE}  //div[@class='p-package p-package--favorite swiper-slide']//form[@id='naplnyplynForm']
+${XPATH_PAY_OPTIONS}  //a[@class='payment-options' and @data-toggle-payment-options='packagemodal3' and text()='Ďalšie možnosti platby']
+${XPATH_TRUSTPAY}  //div[@class='option']//button[@class='btn btn-card' and contains(text(), 'Zaplatiť kartou 14,90€')]
 
 *** Test Cases ***
 Login And Create A New Advertisiment

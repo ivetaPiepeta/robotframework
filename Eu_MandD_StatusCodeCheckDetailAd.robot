@@ -16,7 +16,7 @@ ${DESKTOP_WIDTH}  1920
 ${DESKTOP_HEIGHT}  1080
 ${MOBILE_WIDTH}  390
 ${MOBILE_HEIGHT}  844
-${PREMIUM_DIV_CLASS}  mt-8 flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-col sm:flex-row
+${PREMIUM_DIV_CLASS}  relative flex min-h-[122px] w-full justify-between gap-0.5 md:min-h-[192px] flex-col sm:flex-row mt-8
 ${PREMIUM_SPAN_TEXT}  PREMIUM
 ${FIRST_DETAIL}
 
@@ -89,7 +89,7 @@ Should Ignore Href
     RETURN  ${result}
 
 Run Test With Resolution
-    [Documentation]  Tento test otvorí prehliadač, načíta stránku a overí HTTP status kód.
+    [Documentation]  Tento test otvorí prehliadač, načíta stránku a overí HTTP status kód. - premiove inzeraty
     [Arguments]  ${width}  ${height}
     Disable Insecure Request Warnings
     Create Session  autobazar  ${Base_URL}  verify=False
@@ -121,5 +121,6 @@ Find First Ad
     Sleep  1s
     Scroll Down To Load Content 1 time
     Wait Until Element Is Visible  //div[contains(@class, '${PREMIUM_DIV_CLASS}') and .//span[text()='${PREMIUM_SPAN_TEXT}']]
-    Click Element Using JavaScript  css=div.${PREMIUM_DIV_CLASS} a[target="_blank"]
+    Log To Console  Logujem ze mam premium
+    Click Element Using JavaScript  //div[contains(@class, '${PREMIUM_DIV_CLASS}') and .//span[text()='${PREMIUM_SPAN_TEXT}']]
     Sleep  ${SLEEP_TIME}

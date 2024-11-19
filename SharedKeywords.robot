@@ -303,11 +303,25 @@ Wait Until Loader Disappears And Click Button
     Click Element Using JavaScript  ${xpath}
 
 Perform Login Desktop
+    Sleep  2s
     Wait Until Element Is Visible  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
     Click Element Using JavaScript  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
     Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
     Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
     Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
+    Sleep  1s
+    Log To Console  Korektné prihlásenie do AB.EU
+
+Perform Login Desktop Favorite
+    #login priamo z podstranky Oblubene
+    Sleep  2s
+    Wait Until Element Is Visible  //button[@type='button' and contains(@class, 'block') and text()='Prihlásiť sa']
+    Click Element Using JavaScript  //button[@type='button' and contains(@class, 'block') and text()='Prihlásiť sa']
+    Sleep  1s
+    Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
+    Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
+    Sleep  1s
+    Click Element Using JavaScript  //button[@type='submit' and contains(., 'Prihlásiť sa')]
     Sleep  1s
     Log To Console  Korektné prihlásenie do AB.EU
 

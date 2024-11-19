@@ -37,7 +37,7 @@ Run Test With Resolution
     Set Window Size  ${width}  ${height}
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Perform Login Desktop
+    Perform Login Desktop Favorite
     Scroll Down To Load All Content
     GetAllPageHrefs
     Remove Duplicates From List

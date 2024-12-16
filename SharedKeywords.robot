@@ -48,8 +48,12 @@ ${WAIT_TIMEOUT}  20s
 ${TYPING_DELAY}  0.5s
 ${USERNAME_WORK}   iveta1234522
 ${USERNAME}   testsukromnik2
+${USERNAME2}   vlckovaiveta05@gmail.com
+${USERNAME3}   iveta1234522
 ${PASSWORD_WORK}   takenejake2H
 ${PASSWORD}   Ringier01
+${PASSWORD2}   Ringier01!
+${PASSWORD3}   takenejake2H
 ${ECV_INPUT_NAME}     ecv_vozidla
 ${ECV_INPUT_CLASS}    ecv-input
 @{ECV_LIST}           Z  A  5  7  5  J  L
@@ -308,6 +312,16 @@ Perform Login Desktop
     Click Element Using JavaScript  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
     Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
     Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
+    Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
+    Sleep  1s
+    Log To Console  Korektné prihlásenie do AB.EU
+
+Perform Login Desktop 2
+    Sleep  2s
+    Wait Until Element Is Visible  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
+    Click Element Using JavaScript  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
+    Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME3}
+    Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD3}
     Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
     Sleep  1s
     Log To Console  Korektné prihlásenie do AB.EU
@@ -1012,6 +1026,18 @@ Perform Login Desktop Work
     Sleep  1s
     Log To Console  Korektné prihlásenie do next.AB.work.EU
 
+Add A New Advertisiment Desktop Prod
+    Wait Until Page Is Fully Loaded
+    #Wait Until Element Is Visible  //div[@class='flex']//a[contains(@class, 'bg-[#0a84ff]') and contains(text(), 'Pridať inzerát')]
+    #Click Element Using JavaScript  //a[contains(@href, '/pridat-inzerat') and contains(text(), 'Pridať inzerát')]
+    #Reload Page
+    Go To    ${Base_URL}/pridat-inzerat-beta/
+    Log To Console  Som v novom pridaní
+    Wait Until Element Is Visible  //a[contains(@href, '/pridat-inzerat-beta/osobne-vozidla/zakladne-udaje/') and .//p[contains(text(), 'Miesto pre vaše sedany, limuzíny, SUV, kabrio, hatchbacky, combi, minivany…')]]
+    Click Element Using JavaScript  //a[contains(@href, '/pridat-inzerat-beta/osobne-vozidla/zakladne-udaje/') and .//p[contains(text(), 'Miesto pre vaše sedany, limuzíny, SUV, kabrio, hatchbacky, combi, minivany…')]]
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Vyberám kategóriu Osobné vozidlá
+
 Add A New Advertisiment Desktop Work
     Wait Until Page Is Fully Loaded
     Wait Until Element Is Visible  //div[@class='flex']//a[contains(@class, 'bg-[#0a84ff]') and contains(text(), 'Pridať inzerát')]
@@ -1023,6 +1049,25 @@ Add A New Advertisiment Desktop Work
     Click Element Using JavaScript  //a[contains(@href, '/pridat-inzerat/osobne-vozidla/zakladne-udaje/') and .//p[contains(text(), 'Miesto pre vaše sedany')]]
     Sleep  ${SLEEP_TIME}
     Log To Console  Vyberám kategóriu Osobné a úžitkové autá do 3,5 tony
+
+Click to Check button
+    Wait Until Element Is Visible    //button[.//span[contains(text(), 'Skontrolovať')]]    timeout=10
+    Wait Until Element Is Enabled    //button[.//span[contains(text(), 'Skontrolovať')]]    timeout=10
+    Click Element    //button[.//span[contains(text(), 'Skontrolovať')]]
+    Log To Console  Klikla som na skontrolovať
+
+Add Ecv Prod
+    Wait Until Page Is Fully Loaded Old
+    ${current_url}=    Get Location
+    Log To Console  Aktuálna URL je: ${current_url}
+    Wait Until Element Is Visible  //input[@type='text' and contains(@placeholder, 'Zadajte EČV')]
+    Click Element Using JavaScript  //input[@type='text' and contains(@placeholder, 'Zadajte EČV')]
+    Input Text Slowly  //input[@type='text' and contains(@placeholder, 'Zadajte EČV')]  ${ECV_LIST2}
+    Sleep  ${SLEEP_TIME}
+    Log To Console  Vypĺňam EČV kvôli kontrole eurotaxu
+    Click to Check button
+    Click Next Button Desktop Work
+    Sleep  ${SLEEP_TIME}
 
 Add Ecv Work
     Wait Until Page Is Fully Loaded Old
@@ -1051,6 +1096,24 @@ Check My Ečv Work
     Log To Console  Klikám Skontrolovať ečv
     Sleep  ${SLEEP_TIME}
     Click Next Button Desktop Work
+
+Delete VIN new adding
+    Wait Until Element Is Visible  //input[@type='text' and @name='vin']
+    Scroll Element Into View  //input[@type='text' and @name='vin']
+    Log To Console  scrolujem ku VINku
+    Log To Console  vidim vinko
+    Clear Element Text  //input[@type='text' and @name='vin']
+    Log To Console  výmaz vinka
+
+Basic Data Prod
+    Basic Data Bodywork Work
+    Basic Data Fuel Work
+    Basic Data Drive Work
+    Basic Data Gearbox Work
+    Needed Data Work
+    Click Optional Parameters Button Work
+    Delete VIN new adding
+    Extra Basic Data Work
 
 Basic Data Work
     Basic Data Bodywork Work

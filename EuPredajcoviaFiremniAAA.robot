@@ -42,7 +42,7 @@ Seller Links Check
     [Documentation]  Tento test otvorí prehliadač, načíta stránku predajcov aut, overí HTTP status kód každého inzerátu kliknutím na obrázok.
     Disable Insecure Request Warnings
     FOR  ${url}  IN  @{Valid_Links}
-        Open Valid Link And Check Inner Links Without Checkbox non  ${url}
+        Open Valid Link And Check Inner Links  ${url}
     END
     Navigate ThroughPages Until Last Span
     [Teardown]  Close Browser
@@ -51,6 +51,7 @@ Seller Links Check
 *** Keywords ***
 
 Open Valid Link And Check Inner Links Without Checkbox non
+#pouzivane v minulosti, kym mi neprestalo logovat status kody vnutornych url
     [Arguments]  ${url}
     [Documentation]  Otvára platný odkaz a skontroluje vnútorné odkazy.
     Log To Console  Otváram odkaz: ${url}
@@ -272,4 +273,50 @@ Get All Links And Check Status For All Pages
         Sleep  ${SLEEP_TIME}
         Wait Until Page Is Fully Loaded
     END
+
+Open Valid Link And Check Inner Links
+    [Arguments]  @{Valid_Links}
+    [Documentation]  Iteruje cez zoznam platných odkazov a kontroluje vnútorné odkazy na každej URL.
+
+    FOR  ${url}  IN  @{Valid_Links}
+        Log To Console  Otváram odkaz: ${url}
+        Go To    ${url}
+        Wait Until Page Is Fully Loaded
+        Click Hidden Checkbox
+        Wait Until Page Is Fully Loaded
+        # Kontrola vnútorných odkazov na danej URL
+        Check Inner Links
+    END
+
+Check Inner Links
+    [Documentation]  Kontroluje vnútorné odkazy na aktuálnej stránke.
+    # Overiť, či sú prvky prítomné
+    ${has_elements}=  Run Keyword And Return Status  Wait Until Element Is Visible  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-40')]/a  10s
+    Run Keyword If  ${has_elements}  Log To Console  Links are visible on the page
+    Run Keyword If  not ${has_elements}  Log To Console  ERROR: No links found with the specified XPath
+
+    ${image_a}=  Get WebElements  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-40')]/a
+    ${image_a_count}=  Get Length  ${image_a}
+    Log To Console  Number of links found: ${image_a_count}
+
+    FOR  ${link}  IN  @{image_a}
+        ${href}=  Get Element Attribute  ${link}  href
+        Log To Console  Checking status for link: ${href}
+
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
+        ${status_passed}=  Set Variable  ${status}[0]
+        ${status_code}=  Set Variable  ${status}[1]
+
+        # Kontrola pre úspech RUNNING status pre keyword
+        Run Keyword And Continue On Failure  Should Be Equal  ${status_passed}  PASS
+
+        # Alternatívna kontrola hodnôt
+        ${status_code}=  Set Variable If  '${status_passed}' == 'FAIL'  -1  ${status_code}
+
+        Log To Console  Status code for link ${href} is ${status_code}
+
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link Client  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link Client  ${href}  ${status_code}
+    END
+
 

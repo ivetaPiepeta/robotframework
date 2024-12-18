@@ -45,7 +45,7 @@ Seller check
     Scroll Down To Load All Content
     @{hrefs}  Get Every Page Hrefs
     @{hrefs}  Remove Duplicates From Listtt  @{hrefs}
-    Log Totall Links Found  @{hrefs}
+    Log Total Links Found
     ${filtered_hrefs}=  Filter Links With Calculator  @{hrefs}
     Log To Console  Filter Links With Calculator?
     Check Links Calculator Presence  @{filtered_hrefs}

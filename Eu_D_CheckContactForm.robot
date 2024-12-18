@@ -8,7 +8,7 @@ Resource  SharedKeywords.robot
 
 *** Variables ***
 ${URL}     https://www.autobazar.eu/detail/aston-martin-db-db11-52-v12-bo360perfektstavako-nove-top/AmamJCtvb94/
-${PHONE_NUMBER}    0907 888 777
+${PHONE_NUMBER}    +421 907 888 777
 
 ${PARENT_CLASS}    mt-[16px] grid grid-cols-3 gap-4
 ${TOP_NAV_FORM_XPATH}    //button[contains(@class, 'btn-cta') and text()='Kontaktovať predajcu']

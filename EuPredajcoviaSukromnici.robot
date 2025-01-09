@@ -169,11 +169,11 @@ Open Valid Link And Check Inner Links
     Go To    ${url}
     Wait Until Page Is Fully Loaded
     # Overiť, či sú prvky prítomné
-    ${has_elements}=  Run Keyword And Return Status  Wait Until Element Is Visible  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-50')]/a  10s
+    ${has_elements}=  Run Keyword And Return Status  Wait Until Element Is Visible  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-40')]/a  10s
     Run Keyword If  ${has_elements}  Log To Console  Links are visible on the page
     Run Keyword If  not ${has_elements}  Log To Console  ERROR: No links found with the specified XPath
 
-    ${image_a}=  Get WebElements  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-50')]/a
+    ${image_a}=  Get WebElements  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-40')]/a
     ${image_a_count}=  Get Length  ${image_a}
     Log To Console  Number of links found: ${image_a_count}
 

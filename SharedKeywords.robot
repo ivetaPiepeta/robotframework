@@ -825,6 +825,17 @@ Select Year From Dropdown
     Log To Console  Vyhľadávam rok od: ${button_text_show}
     Sleep  ${SLEEP_TIME}
 
+Select Year To Dropdown
+    [Arguments]  ${year}
+    ${option_value}=  Set Variable  do ${year}
+    Wait Until Element Is Visible  //select[@name='yearTo']
+    Click Element Using JavaScript  //select[@name='yearTo']
+    Select From List By Label  //select[@name='yearTo']  ${option_value}
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadávam rok od: ${button_text_show}
+    Sleep  ${SLEEP_TIME}
+
 Select Price From Dropdown
     [Arguments]  ${price}
     ${option_value}=  Set Variable  od ${price} €
@@ -856,6 +867,17 @@ Input Value Km Into Dropdown
     Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Vyhľadávam kilometre: ${button_text_show}
+    Sleep  ${SLEEP_TIME}
+
+Input Value From Km Into Dropdown
+    [Arguments]  ${km}
+    ${option_value}=  Set Variable  ${km}
+    Wait Until Element Is Visible  //input[@name='mileageFrom']
+    Click Element Using JavaScript  //input[@name='mileageFrom']
+    Input Text  //input[@name='mileageFrom']  ${km}
+    Sleep  ${SLEEP_TIME}
+    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    Log To Console  Vyhľadávam kilometre do: ${button_text_show}
     Sleep  ${SLEEP_TIME}
 
 Input Value To Km Into Dropdown

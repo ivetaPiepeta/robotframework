@@ -16,13 +16,14 @@ ${Sub_URL}  predajcovia-aut/
 ${TOTAL_LINKS}  0
 ${REMAINING_LINKS}  0
 ${SLEEP_TIME}  2s
-@{Search_Terms}  Impa Žiar nad Hronom  Autodado    BB Auto
+@{Search_Terms}  Ján Balogh STYX  STYX BA s.r.o.
 @{Paginator_Links}
 ${NEXT_BUTTON_XPATH}  //a[contains(@class, 'cursor-pointer') and contains(text(), 'Ďalší predajcovia')]
 ${PAGINATOR_WRAPPER_SELLER}  //div[@class="float-none mx-0 my-0"]
 
 *** Test Cases ***
 Seller check
+    [Documentation]  Tento test otvorí prehliadač, načíta stránku predajcov aut, overí HTTP status kód, odklikne consent popup a vyplní text do vyhľadávacieho políčka.
     Disable Insecure Request Warnings
     Create Session  predajcovia_aut  ${Base_URL}${Sub_URL}  verify=False
     ${response}  GET On Session  predajcovia_aut  /
@@ -33,18 +34,15 @@ Seller check
     Wait Until Page Is Fully Loaded
     FOR  ${term}  IN  @{Search_Terms}
         Log To Console  Searching for: ${term}
+        Wait Until Page Is Fully Loaded
+        Sleep  ${SLEEP_TIME}
+        Input Search Term And Click Button  ${term}
+        Sleep  ${SLEEP_TIME}
+        Wait Until Page Is Fully Loaded
         Get All Links And Check Status For All Pages
     END
-
-    #${csv_data}= Read table from CSV path=/Users/vlckova.brindzova/PycharmProjects/robotframework/venv/csv/predajcovia-test.csv
-    #FOR  ${term}  IN  @{csv_data}
-    #    Log To Console  Searching for: ${term}
-    #    Get All Links And Check Status For All Pages
-    #END
-
-    Log All Valid Links
     Fail Test If Broken Links Exist
-
+    Log All Valid Links
 
 Seller Links Check
     [Documentation]  Tento test otvorí prehliadač, načíta stránku predajcov aut, overí HTTP status kód každého inzerátu kliknutím na obrázok.
@@ -190,49 +188,15 @@ Open Valid Link And Check Inner Links
     Log To Console  Otváram odkaz: ${url}
     Go To    ${url}
     Wait Until Page Is Fully Loaded
-    Log To Console  Loadujem
-    # Overiť, či sú prvky prítomné
-    ${has_elements}=  Run Keyword And Return Status  Wait Until Element Is Visible  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-40')]/a  10s
-    Run Keyword If  ${has_elements}  Log To Console  Links are visible on the page
-    Run Keyword If  not ${has_elements}  Log To Console  ERROR: No links found with the specified XPath
-
-    ${image_a}=  Get WebElements  //div[contains(@class, 'relative') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5')]/div[contains(@class, 'relative') and contains(@class, 'z-40')]/a
-    ${image_a_count}=  Get Length  ${image_a}
-    Log To Console  Number of links found: ${image_a_count}
+    ${image_a}=  Get WebElements  //div[contains(@class, 'mt-8') and contains(@class, 'flex') and contains(@class, 'min-h-[122px]') and contains(@class, 'w-full') and contains(@class, 'justify-between') and contains(@class, 'gap-0.5') and contains(@class, 'md:min-h-[192px]') and contains(@class, 'flex-row')]/a[1]
 
     FOR  ${link}  IN  @{image_a}
         ${href}=  Get Element Attribute  ${link}  href
-        Log To Console  Checking status for link: ${href}
-
         ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${href}
-        ${status_passed}=  Set Variable  ${status}[0]
-        ${status_code}=  Set Variable  ${status}[1]
-
-        # Kontrola pre úspech RUNNING status pre keyword
-        Run Keyword And Continue On Failure  Should Be Equal  ${status_passed}  PASS
-
-        # Alternatívna kontrola hodnôt
-        ${status_code}=  Set Variable If  '${status_passed}' == 'FAIL'  -1  ${status_code}
-
-        Log To Console  Status code for link ${href} is ${status_code}
-
-        Run Keyword If  '${status_code}' == '200'  Log Valid Link Client  ${href}
-        Run Keyword If  '${status_code}' != '200'  Log Broken Link Client  ${href}  ${status_code}
-    END
-
-Log Valid Link Client
-    [Arguments]  ${href}
-    Log To Console  Valid link: ${href}
-
-Log Broken Link Client
-    [Arguments]  ${href}  ${status_code}
-    Log To Console  Broken link: ${href}, status code: ${status_code}
-
-Log Totall Links Found
-    [Arguments]  @{hrefs}
-    ${num_links}  Evaluate  len(${hrefs})
-    Log To Console  Total links found: ${num_links}
-    FOR  ${href}  IN  @{hrefs}
-        Log To Console  ${href}
+        Log To Console  ${status}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        Log To Console  status kód linku ${href} je ${status_code}
+        Run Keyword If  '${status_code}' == '200'  Log Valid Link  ${href}
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${href}  ${status_code}
     END
 

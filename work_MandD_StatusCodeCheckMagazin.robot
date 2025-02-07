@@ -28,13 +28,13 @@ Run Test With Resolution
     [Arguments]  ${width}  ${height}
     Log To Console  Starting test case with resolution  ${width}  ${height}
     Disable Insecure Request Warnings
-    Create Session  autobazar  ${URL_AProka_end}  verify=False
+    Create Session  autobazar  ${URL_magazin_work}  verify=False
     ${response}  GET On Session  autobazar  /
     Log  HTTP status kód je: ${response.status_code}
     Should Be Equal As Numbers  ${response.status_code}  200
-    Open Browser  ${URL_AProka_end}  chrome
+    Open Browser  ${URL_magazin_work}  chrome
     Set Window Size  ${width}  ${height}
-    Switch To Frame And Accept All
+    #Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded Old
     Scroll Down To Load All Content
     GetAllPageHrefs

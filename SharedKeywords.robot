@@ -14,15 +14,17 @@ ${URL_dovoz}  https://www.autobazar.eu/vysledky-na-dovoz/
 ${URL_najnovsie}  https://www.autobazar.eu/vysledky-najnovsie/
 ${URL_sellers}  https://www.autobazar.eu/predajcovia-aut/
 ${URL_seller_detail}  https://www.autobazar.eu/predajca/autodado/
-${URL_seller_detail2}  https://www.autobazar.eu/predajca/styxvrable/
+${URL_seller_detail2}  https://www.autobazar.eu/predajca/autoberg/
 ${URL_seller_detail3}  https://www.autobazar.eu/predajca//
 ${URL_forum}  https://forum.autobazar.eu/
 ${URL_magazin}  https://magazin.autobazar.eu/
+${URL_magazin_work}  https://magazin.autobazareu.work/
 ${URL_AProka}  https://www.autopredajcaroka.eu/
+${URL_AProka_end}  https://www.autopredajcaroka.eu/?test=1
 ${URL_documents}  https://www.autobazar.eu/dokumenty
 ${URL_tests}  https://www.autobazar.eu/testy-aut/
 ${URL_prices}  https://www.autobazar.eu/ceny-aut/
-${URL_advertisiment}  https://www.autobazar.eu/detail/skoda-octavia-16-tdi-cr-dpf-greentec-ambition/Amrf2t3om8o/
+${URL_advertisiment}  https://www.autobazar.eu/detail/volkswagen-touareg-25-r5-tdi/Ae9Y-MDqBYa/
 ${URL_podcast}  https://magazin.autobazar.eu/podcasty
 ${URL_myaccount}  https://autobazar.eu/moje-konto/
 ${URL_myfavorite}  https://autobazar.eu/moje-konto/oblubene/
@@ -323,6 +325,29 @@ Perform Login Desktop 2
     Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME3}
     Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD3}
     Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
+    Sleep  1s
+    Log To Console  Korektné prihlásenie do AB.EU
+
+Perform Login Desktop Migrated User
+    Sleep  2s
+    Wait Until Element Is Visible  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
+    Click Element Using JavaScript  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
+    Sleep  1s
+    Wait Until Element Is Visible  //button[contains(@class, 'flex h-full w-full items-center justify-center rounded-tr-2xl bg-[#EBEBF514]') and @type='button' and .//span[text()='Nové prihlásenie']]
+    Click Element Using JavaScript  //button[contains(@class, 'flex h-full w-full items-center justify-center rounded-tr-2xl bg-[#EBEBF514]') and @type='button' and .//span[text()='Nové prihlásenie']]
+    Sleep  1s
+    Wait Until Page Contains Element  //button[contains(@class, 'btn flex h-[48px] w-full items-center justify-center bg-white text-black') and .//span[text()='Prihlásiť sa']]
+    Click Element Using JavaScript  //button[contains(@class, 'btn flex h-[48px] w-full items-center justify-center bg-white text-black') and .//span[text()='Prihlásiť sa']]
+    Log To Console  E
+    Sleep  1s
+    Wait Until Page Contains Element  //input[@id='username']
+    Log To Console  Eg
+    Click Element Using JavaScript  //input[@id='username']
+    Log To Console  Eh
+    Input Text  //input[@id='username']  ${USERNAME2}
+    Input Text  //input[@id='password']  ${PASSWORD2}
+    Click Element Using JavaScript  //button[@class='submit-button' and text()='Prihlásiť sa']
+    #Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
     Sleep  1s
     Log To Console  Korektné prihlásenie do AB.EU
 
@@ -776,8 +801,8 @@ Select Brand From Dropdown And Close Listbox
     [Arguments]  ${brand}
     ${button_xpath}=    Set Variable  //button[.//span[text()='Potvrdiť']]
     ${listbox_xpath}=    Set Variable  //div[@class='scrollbar mt-[70px] h-60 w-full overflow-auto bg-[#002466] px-3 py-1 text-sm']
-    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
-    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Značka']
+    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/30')]//span[text()='Značka']
+    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/30')]//span[text()='Značka']
     Log To Console  Klikám na select
     Sleep  ${SLEEP_TIME}
     Wait Until Element Is Visible  //div[@class='flex space-x-1']//button[picture/img[@alt='${brand}']]
@@ -793,8 +818,8 @@ Select Model From Dropdown And Close Listbox
     [Arguments]  ${model}
     ${button_xpath}=    Set Variable  //button[.//span[text()='Potvrdiť']]
     ${listbox_xpath}=    Set Variable  //div[@class='scrollbar mt-[70px] h-60 w-full overflow-auto bg-[#002466] px-3 py-1 text-sm']
-    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
-    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/60')]//span[text()='Všetky modely']
+    Wait Until Element Is Visible  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/30')]//span[text()='Všetky modely']
+    Click Element Using JavaScript  //button[contains(@class, 'relative mt-1 h-12 w-full rounded-[8px] border-none bg-[#00225F] px-3 py-3 text-left disabled:cursor-not-allowed text-white/30')]//span[text()='Všetky modely']
     Log To Console  Klikám na select
     Sleep  ${SLEEP_TIME}
     Wait Until Element Is Visible  //div[@class='relative flex cursor-pointer select-none items-center py-0.5 pr-4 text-white']//span[starts-with(text(), '${model}')]

@@ -47,7 +47,7 @@ Seller check
 Using A Filter HP
     Wait Until Page Is Fully Loaded
     Log To Console  Začínam vyhľadávanie
-    ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
+    ${button_text_show}=    Get Text    //button[contains(@class, 'button-search') and starts-with(text(), 'Zobraziť:')]
     Log To Console  Počet inzerátov bez filtra: ${button_text_show}
     Select Brand From Dropdown And Close Listbox  Škoda
     Click At Coordinates  100  100

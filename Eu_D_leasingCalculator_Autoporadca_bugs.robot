@@ -54,6 +54,7 @@ Seller check
 Search A Calculator List
     Wait Until Page Is Fully Loaded
     Log To Console  Začínam vyhľadávanie
+    Advanced search
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov bez filtra: ${button_text_show}
     Scroll Element Into View  //select[@name='yearFrom']

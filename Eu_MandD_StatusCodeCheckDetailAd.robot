@@ -115,6 +115,8 @@ Find First Ad
     Go To  ${Base_URL}
     Wait Until Page Is Fully Loaded
     Scroll Down To Load Content 1 time
+    Click Element Using JavaScript  xpath=//button[.//span[text()='Rozšírené hľadanie']]
+    Sleep  ${SLEEP_TIME}
     Select Option From Dropdown By Index    //select[@name='userType']    2
     Sleep  ${SLEEP_TIME}
     Wait Until Page Is Fully Loaded

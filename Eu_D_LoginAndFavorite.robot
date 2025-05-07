@@ -30,7 +30,7 @@ Run Test With Resolution
     Set Window Size  ${width}  ${height}
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Perform Login Desktop
+    Perform Login Desktop Migrated User
     Click To Favorites
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
@@ -38,6 +38,7 @@ Run Test With Resolution
 Click To Favorites
     Go To  ${Base_URL}
     Wait Until Page Is Fully Loaded
+    Advanced search
     Scroll Down To Load Content 1 time
     Select Option From Dropdown By Index    //select[@name='userType']    2
     Sleep  ${SLEEP_TIME}
@@ -46,3 +47,4 @@ Click To Favorites
     Scroll Down To Load Content 1 time
     Wait Until Element Is Visible  //button[.//picture/img[@alt='parking'][1]]
     Click Element Using JavaScript  //button[.//picture/img[@alt='parking'][1]]
+    Sleep  7s

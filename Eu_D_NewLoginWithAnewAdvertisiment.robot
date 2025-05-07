@@ -43,7 +43,7 @@ Run Test With Resolution
     Click Next Button Desktop Work
     Price Part Work
     Click Next Button Desktop Work
-    Upload An Image Work  ${image_path2}
+    Upload An Image Work  ${image_path}
     Click Button Add An Advertisement Desktop Work
 
     Sleep  ${SLEEP_TIME}

@@ -32,6 +32,7 @@ Seller check
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
     Scroll Down To Load Content 1 time
+    Advanced search
     Select Option From Dropdown By Index    //select[@name='userType']    2
     Sleep  ${SLEEP_TIME}
     Wait Until Page Is Fully Loaded

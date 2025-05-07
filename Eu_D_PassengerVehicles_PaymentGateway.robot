@@ -37,7 +37,7 @@ Run Test With Resolution
     Maximize Browser Window
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Perform Login Desktop
+    Perform Login Desktop Migrated User
     Add A New Advertisiment Desktop
     Add Ecv
     Choose A Model Prestige

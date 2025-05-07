@@ -42,7 +42,7 @@ Run Test With Resolution
     Maximize Browser Window
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Perform Login Desktop
+    Perform Login Desktop Migrated User
     Add With No Ecv Desktop
     Choose A Model Starfinger
     Price Part Motorcycle

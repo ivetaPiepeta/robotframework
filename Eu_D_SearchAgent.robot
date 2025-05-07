@@ -32,8 +32,9 @@ Seller check
     Maximize Browser Window
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Perform Login Desktop
+    Perform Login Desktop Migrated User
     Scroll Down To Load Content 1 time
+    Advanced search
     Using A Filter HP For Search Agent
     Save A New Search Agent
     Detele A Search Agent
@@ -96,8 +97,8 @@ Wait For Element And Compare Values
 Save A New Search Agent
     Sleep  ${SLEEP_TIME}
     Wait Until Page Is Fully Loaded
-    Wait Until Element Is Visible  //span[@class='ml-2' and contains(text(), 'Uložiť hľadanie')]
-    Click Element Using JavaScript  //span[@class='ml-2' and contains(text(), 'Uložiť hľadanie')]
+    Wait Until Element Is Visible  //span[@class='ml-1' and contains(text(), 'Uložiť hľadanie')]
+    Click Element Using JavaScript  //span[@class='ml-1' and contains(text(), 'Uložiť hľadanie')]
     Log To Console  Klikám na uloženie hľadania
     Wait Until Element Is Visible  //input[@type='text' and @name='title' and @placeholder='Moje obľúbené vyhľadávanie č.1']
     Log To Console  Zobrazí sa modal pre uloženie

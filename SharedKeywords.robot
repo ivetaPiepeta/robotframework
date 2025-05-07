@@ -261,6 +261,48 @@ Check Single Href Status Client
     Log  HTTP status kód pre ${page} je: ${response.status_code}
     RETURN  PASS  ${response.status_code}
 
+Check Single Href Status Twitter
+    [Arguments]  ${page}
+    Disable Insecure Request Warnings
+    ${response}=  GET On Session  autobazar  ${page}
+    Log  HTTP status kód pre ${page} je: ${response.status_code}
+    RETURN  ${response.status_code}
+
+Check Redirect Href Status Twitter
+    [Arguments]  ${url}
+    Disable Insecure Request Warnings
+    ${response}=  Get Request  ${url}
+    ${status_code}=  Get Response Status Code  ${response}
+    Run Keyword And Return Status  Run Keyword If  '${status_code}' == '301' or '${status_code}' == '302'
+        ${final_response}=  Get Request  ${url}
+        ${final_status_code}=  Get Response Status Code  ${final_response}
+        RETURN  ${final_status_code}
+    RETURN  ${status_code}
+
+CheckHrefsStatusTwitter
+    ${REMAINING_LINKS}=  Set Variable  ${REMAINING_LINKS}
+    ${TOTAL_LINKS}=  Set Variable  ${TOTAL_LINKS}
+    FOR  ${page}  IN  @{All_links}
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status Twitter  ${page}
+        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
+        ${status_code}=  Evaluate  '${status_code}'
+
+        IF  '${status_code}' == '301' or '${status_code}' == '302'
+            ${final_status}=  Run Keyword And Ignore Error  Check Redirect Href Status Twitter  ${page}
+            ${final_status_code}=  Set Variable If  '${final_status[0]}' == 'PASS'  ${final_status[1]}  -1
+            ${status_code}=  Set Variable  ${final_status_code}
+        END
+
+        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${page}  ${status_code}
+        ${REMAINING_LINKS}=  Evaluate  ${REMAINING_LINKS} - 1
+        Log To Console  ${REMAINING_LINKS}/${TOTAL_LINKS} ${page}  no new line=True
+    END
+    Set Variable  @{All_links}  @{EMPTY}
+
+Log Broken Link Twitter
+    [Arguments]  ${url}  ${status_code}
+    Log To Console  Broken Link: ${url} with status code ${status_code}
+
 Should Ignore Href
     [Arguments]  ${href}
     ${result}=  Run Keyword And Return Status  Should Contain Any  ${href}  @{Ignored_Patterns}
@@ -660,13 +702,16 @@ Price Part
 
 Price Part Motorcycle
     Wait Until Page Is Fully Loaded Ecv Part
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/motocykle/spresnenie
+    ${current_url}=    Get Location
+    Log To Console  ${current_url}
     Wait Until Element Is Visible  //input[@type='number' and @data-enable='drivenkm']
     Input Text  //input[@type='number' and @data-enable='drivenkm']  ${KM2}
     Click Next Button Desktop
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/motocykle/vybava
+    ${current_url}=    Get Location
+    Log To Console  ${current_url}
     Click Next Button Desktop
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/motocykle/stav
+    ${current_url}=    Get Location
+    Log To Console  ${current_url}
     Click Next Button Desktop
     Sleep  1s
     Wait Until Element Is Visible  //input[@type='number' and @name='price' and @id='normalPrice' and contains(@class, 'normalPrice')]
@@ -677,11 +722,13 @@ Price Part Motorcycle
     Log To Console  vpisujem cenu
     Sleep  ${SLEEP_TIME}
     Click Next Button Desktop
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/motocykle/cena
+    ${current_url}=    Get Location
+    Log To Console  ${current_url}
 
 Upload An Image
     [Arguments]    ${image}
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/yy/media
+    ${current_url}=    Get Location
+    Log To Console  ${current_url}
     # Kliknutie na tlačidlo "nahrajte" na zviditeľnenie input elementu
     Click Element Using JavaScript    xpath=//button[contains(@class, 'data-button-upload-photos')]
     # Výber a nahranie súboru
@@ -695,12 +742,13 @@ Select From List
 Check Adding Of Adv
     Wait Until Page Is Fully Loaded Ecv Part
     ${header_text} =    Get Text    xpath=//*[@id="tasks2"]/center/h1    # Získa text z <h1> elementu vo vnútri #tasks2
-    Should Be Equal As Strings    ${header_text}    Váš inzerát ešte nie je zverejnený    # Porovná text s očakávaným textom
+    Should Be Equal As Strings    ${header_text}    Vyberte si balíček a zverejnite inzerát    # Porovná text s očakávaným textom
     Log To Console  Overujem pridanie inzerátu
 
 Confirm Checkbox Add Ad
     Wait Until Page Is Fully Loaded Ecv Part
-    Log To Console  https://www.autobazar.eu/pridat-inzerat/.../kontakt
+    ${current_url}=    Get Location
+    Log To Console  ${current_url}
     Scroll Down To Load Content 1 time
     Click Element   id=contact-advertising-conditions
     Log To Console  Potvrdzujem súhlas klienta
@@ -1443,4 +1491,8 @@ Click Button Add An Advertisement Desktop Work
     Wait Until Element Is Visible  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT2}')]
     Click Element Using JavaScript  //button[contains(text(),'${BUTTON_ADD_AN_ADVERTISEMENT_TEXT2}')]
     Log To Console  Klikám Pridať inzerát
+    Sleep  ${SLEEP_TIME}
+
+Advanced search
+    Click Element Using JavaScript  xpath=//button[.//span[text()='Rozšírené hľadanie']]
     Sleep  ${SLEEP_TIME}

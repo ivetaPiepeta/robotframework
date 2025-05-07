@@ -54,6 +54,8 @@ Seller check
 Search A Calculator List
     Wait Until Page Is Fully Loaded
     Log To Console  Začínam vyhľadávanie
+    Click Element Using JavaScript  xpath=//button[.//span[text()='Rozšírené hľadanie']]
+    Sleep  ${SLEEP_TIME}
     ${button_text_show}=    Get Text    //button[contains(., 'Zobraziť')]
     Log To Console  Počet inzerátov bez filtra: ${button_text_show}
     Scroll Element Into View  //select[@name='yearFrom']

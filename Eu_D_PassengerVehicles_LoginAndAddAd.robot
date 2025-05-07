@@ -41,7 +41,7 @@ Run Test With Resolution
     Maximize Browser Window
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Perform Login Desktop
+    Perform Login Desktop Migrated User
     Add A New Advertisiment Desktop
     Add Ecv
     Choose A Model Prestige
@@ -243,5 +243,5 @@ Change Checkbox Value
 Check Adding Of Adv
     Wait Until Page Is Fully Loaded Ecv Part
     ${header_text} =    Get Text    xpath=//*[@id="tasks2"]/center/h1    # Získa text z <h1> elementu vo vnútri #tasks2
-    Should Be Equal As Strings    ${header_text}    Váš inzerát ešte nie je zverejnený    # Porovná text s očakávaným textom
+    Should Be Equal As Strings    ${header_text}    Vyberte si balíček a zverejnite inzerát    # Porovná text s očakávaným textom
     Log To Console  Overujem pridanie inzerátu

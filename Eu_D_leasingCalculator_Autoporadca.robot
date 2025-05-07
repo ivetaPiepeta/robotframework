@@ -38,6 +38,7 @@ Seller check
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
     Scroll Down To Load Content 1 time
+    Advanced search
     Search A Calculator List
     Sleep  ${SLEEP_TIME}
     Log To Console  Mám vyfiltrovanú ponuku vyhovujúcu leasingovej kalkulačke.

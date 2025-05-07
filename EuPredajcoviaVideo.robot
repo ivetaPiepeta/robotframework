@@ -33,7 +33,7 @@ Seller check
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
     Scroll Down To Load Content 2 times
-    Click Advanced Search Button
+    Advanced Search
     Sleep  ${SLEEP_TIME}
     Click Checkbox  ${checkbox_id}
     Wait Until Loader Disappears And Click Button  //button[contains(@class, 'button-search disabled:cursor-not-allowed disabled:bg-[#0a84ff]/50')]
@@ -219,8 +219,8 @@ Log Totall Links Found
 
 Click Advanced Search Button
     [Arguments]    ${index}=0
-    Wait Until Page Contains Element    //button[contains(text(), 'Rozšírené vyhľadávanie')]
-    ${buttons}=    Get WebElements    //button[contains(text(), 'Rozšírené vyhľadávanie')]
+    Wait Until Page Contains Element    //button[contains(text(), 'Rozšírené hľadanie')]
+    ${buttons}=    Get WebElements    //button[contains(text(), 'Rozšírené hľadanie')]
     Click Element    ${buttons[${index}]}
 
 Click Checkbox

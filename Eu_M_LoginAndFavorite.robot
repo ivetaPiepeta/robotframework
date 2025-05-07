@@ -36,7 +36,7 @@ Run Test With Resolution
     Set Window Size  ${width}  ${height}
     Switch To Frame And Accept All
     Wait Until Page Is Fully Loaded
-    Perform Login Desktop
+    Perform Login Desktop Migrated User
     Click To Favorites
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist

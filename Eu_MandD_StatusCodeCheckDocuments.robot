@@ -41,7 +41,7 @@ Run Test With Resolution
     GetAllPageHrefs
     Remove Duplicates From List
     Log Total Links Found
-    CheckHrefsStatus
+    CheckHrefsStatusTwitter
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
 
@@ -62,6 +62,6 @@ Run Test With Resolution Mobile
     GetAllPageHrefs
     Remove Duplicates From List
     Log Total Links Found
-    CheckHrefsStatus
+    CheckHrefsStatusTwitter
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist

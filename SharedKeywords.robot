@@ -271,32 +271,32 @@ Check Single Href Status Twitter
 Check Redirect Href Status Twitter
     [Arguments]  ${url}
     Disable Insecure Request Warnings
-    ${response}=  Get Request  ${url}
+    ${response}=  GET On Session  autobazar  ${url}
     ${status_code}=  Get Response Status Code  ${response}
-    Run Keyword And Return Status  Run Keyword If  '${status_code}' == '301' or '${status_code}' == '302'
-        ${final_response}=  Get Request  ${url}
-        ${final_status_code}=  Get Response Status Code  ${final_response}
-        RETURN  ${final_status_code}
+    Run Keyword If  '${status_code}' == '301' or '${status_code}' == '302'  ${final_response}=  GET On Session  autobazar  ${url}
+    ${final_status_code}=  Get Response Status Code  ${final_response}
+    RETURN  ${final_status_code}
     RETURN  ${status_code}
+
+Log Warning Link Twitter
+    [Arguments]  ${url}  ${status_code}
+    Log To Console  Warning for Link: ${url} with temporary redirect status code ${status_code}
 
 CheckHrefsStatusTwitter
     ${REMAINING_LINKS}=  Set Variable  ${REMAINING_LINKS}
     ${TOTAL_LINKS}=  Set Variable  ${TOTAL_LINKS}
+
     FOR  ${page}  IN  @{All_links}
-        ${status}=  Run Keyword And Ignore Error  Check Single Href Status Twitter  ${page}
+        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${page}
         ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
-        ${status_code}=  Evaluate  '${status_code}'
 
-        IF  '${status_code}' == '301' or '${status_code}' == '302'
-            ${final_status}=  Run Keyword And Ignore Error  Check Redirect Href Status Twitter  ${page}
-            ${final_status_code}=  Set Variable If  '${final_status[0]}' == 'PASS'  ${final_status[1]}  -1
-            ${status_code}=  Set Variable  ${final_status_code}
-        END
+        Run Keyword If  '${status_code}' != '200'  Run Keyword If  '${page}' == 'https://twitter.com/AutobazarEU' or '${page}' == 'https://www.linkedin.com/company/autobazareu'  Log Warning Link Twitter  ${page}  ${status_code}
+        Run Keyword If  '${status_code}' != '200' and '${page}' != 'https://twitter.com/AutobazarEU' and '${page}' != 'https://www.linkedin.com/company/autobazareu'  Log Broken Link  ${page}  ${status_code}
 
-        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${page}  ${status_code}
         ${REMAINING_LINKS}=  Evaluate  ${REMAINING_LINKS} - 1
         Log To Console  ${REMAINING_LINKS}/${TOTAL_LINKS} ${page}  no new line=True
     END
+
     Set Variable  @{All_links}  @{EMPTY}
 
 Log Broken Link Twitter

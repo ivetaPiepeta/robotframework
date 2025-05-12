@@ -25,11 +25,6 @@ Open Browser And Check Statuses of hrefs on Desktop
     Run Test With Resolution    ${DESKTOP_WIDTH}    ${DESKTOP_HEIGHT}
 
 *** Keywords ***
-
-Disable Insecure Request Warnings
-    [Documentation]  Potlačí upozornenia na neoverené HTTPS požiadavky.
-    Evaluate  exec("import urllib3; urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)")
-
 GetAllPageHrefs
     [Documentation]  Získa všetky odkazy (a-href) na stránke.
     ${links}=  Get WebElements  //a[@href]
@@ -50,22 +45,6 @@ Log Total Links Found
     Set Global Variable  ${TOTAL_LINKS}  ${total_links}
     Set Global Variable  ${REMAINING_LINKS}  ${total_links}
 
-CheckHrefsStatus
-    FOR  ${page}  IN  @{All_links}
-        ${status}=  Run Keyword And Ignore Error  Check Single Href Status  ${page}
-        ${status_code}=  Set Variable If  '${status[0]}' == 'PASS'  ${status[1]}  -1
-        Run Keyword If  '${status_code}' != '200'  Log Broken Link  ${page}  ${status_code}
-        ${REMAINING_LINKS}=  Evaluate  ${REMAINING_LINKS} - 1
-        Log To Console  ${REMAINING_LINKS}/${TOTAL_LINKS} ${page}  no new line=True
-    END
-    Set Variable  @{All_links}  @{EMPTY}
-
-Check Single Href Status
-    [Arguments]  ${page}
-    Disable Insecure Request Warnings
-    ${response}=  GET On Session  autobazar  ${page}
-    Log  HTTP status kód pre ${page} je: ${response.status_code}
-    RETURN  ${response.status_code}
 
 Log Broken Link
     [Arguments]  ${url}  ${status_code}
@@ -102,7 +81,7 @@ Run Test With Resolution
     GetAllPageHrefs
     Remove Duplicates From List
     Log Total Links Found
-    CheckHrefsStatus
+    CheckHrefsStatusTwitter
     [Teardown]  Close Browser
     Fail Test If Broken Links Exist
 

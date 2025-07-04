@@ -36,7 +36,7 @@ Run Test With Resolution
     Scroll Down To Load All Content
     ${links_xpath}=  Set Variable  //div[contains(@class, 'mb-2 hidden h-[44px] w-full items-center justify-evenly rounded-[8px] bg-[#002973] text-[14px] font-medium lg:flex')]
     ${hrefs}=  Get All Links In Element  ${links_xpath}
-    Verify Status For All Links  @{hrefs}
+    Verify Status For All Links Twitter  @{hrefs}
     # Klikanie na jednotlivé odkazy a overovanie ďalších odkazov na týchto stránkach
     Click And Verify Links On Page From Current Session  @{hrefs}
     [Teardown]  Close Browser

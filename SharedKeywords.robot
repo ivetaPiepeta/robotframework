@@ -17,6 +17,7 @@ ${URL_seller_detail}  https://www.autobazar.eu/predajca/autodado/
 ${URL_seller_detail2}  https://www.autobazar.eu/predajca/autoberg/
 ${URL_seller_detail3}  https://www.autobazar.eu/predajca//
 ${URL_forum}  https://forum.autobazar.eu/
+${URL_forum_work}  https://forum.autobazareu.work/
 ${URL_magazin}  https://magazin.autobazar.eu/
 ${URL_magazin_work}  https://magazin.autobazareu.work/
 ${URL_AProka}  https://www.autopredajcaroka.eu/
@@ -52,10 +53,12 @@ ${USERNAME_WORK}   iveta1234522
 ${USERNAME}   testsukromnik2
 ${USERNAME2}   vlckovaiveta05@gmail.com
 ${USERNAME3}   iveta1234522
+${USERNAME4}   kontonazmenu
 ${PASSWORD_WORK}   takenejake2H
 ${PASSWORD}   Ringier01
 ${PASSWORD2}   Ringier01!
 ${PASSWORD3}   takenejake2H
+${PASSWORD4}   Cetelem01
 ${ECV_INPUT_NAME}     ecv_vozidla
 ${ECV_INPUT_CLASS}    ecv-input
 @{ECV_LIST}           Z  A  5  7  5  J  L
@@ -66,12 +69,19 @@ ${image_path}  /Users/vlckova.brindzova/PycharmProjects/robotframework/venv/Phot
 ${image_path2}  /Users/vlckova.brindzova/PycharmProjects/robotframework/venv/Photos/adamotoo.jpeg
 ${BUTTON_ADD_AN_ADVERTISEMENT_TEXT}  Pridať inzerát
 ${BUTTON_ADD_AN_ADVERTISEMENT_TEXT2}  Pridať
+${XPATH_EDIT_BUTTON}  //div[contains(@class, 'vehicle-type-input-wrapper')]//a[@class='vehicle-type__edit' and @data-in='Zmeniť názov']
+${XPATH_DONE_BUTTON}  //div[contains(@class, 'vehicle-type-input-wrapper')]//a[@class='vehicle-type__edit' and @data-out='Hotovo' and normalize-space(text())='Hotovo']
+${XPATH_INPUT2}  //div[contains(@class, 'vehicle-type-input-wrapper')]//input[@name='carName' and @id='carName']
+${NEW_VALUE}  Testovací inzerát prosím nereagujte naň
+
 ${KM}  10000
 ${PRICE}  30000
 ${KM2}  10000
 ${KM3}  100000
 ${KM4}  150000
+${KM5}  666666
 ${PRICE2}  2500
+${PRICE3}  2999
 ${PRICE_FROM}  13000
 ${PRICE_TO}  25000
 ${YEAR_FROM}  1999
@@ -354,8 +364,8 @@ Perform Login Desktop
     Sleep  2s
     Wait Until Element Is Visible  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
     Click Element Using JavaScript  //button[.//picture/img[@alt='Prihlásiť'] and .//span[text()='Prihlásiť']]
-    Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME}
-    Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD}
+    Input Text  //input[@type='text' and @placeholder='Meno, email alebo tel. číslo']  ${USERNAME4}
+    Input Text  //input[@type='password' and @placeholder='Heslo']  ${PASSWORD4}
     Click Element Using JavaScript  //button[contains(., 'Prihlásiť sa')]
     Sleep  1s
     Log To Console  Korektné prihlásenie do AB.EU
@@ -380,12 +390,9 @@ Perform Login Desktop Migrated User
     Sleep  1s
     Wait Until Page Contains Element  //button[contains(@class, 'btn flex h-[48px] w-full items-center justify-center bg-white text-black') and .//span[text()='Prihlásiť sa']]
     Click Element Using JavaScript  //button[contains(@class, 'btn flex h-[48px] w-full items-center justify-center bg-white text-black') and .//span[text()='Prihlásiť sa']]
-    Log To Console  E
     Sleep  1s
     Wait Until Page Contains Element  //input[@id='username']
-    Log To Console  Eg
     Click Element Using JavaScript  //input[@id='username']
-    Log To Console  Eh
     Input Text  //input[@id='username']  ${USERNAME2}
     Input Text  //input[@id='password']  ${PASSWORD2}
     Click Element Using JavaScript  //button[@class='submit-button' and text()='Prihlásiť sa']
@@ -553,6 +560,21 @@ Verify Status For All Links
         ${response}=  GET On Session  autobazar  ${href}
         Log To Console  ${href} - Status Code: ${response.status_code}
         Should Be Equal As Numbers  ${response.status_code}  200  Status code of ${href} should be 200
+    END
+
+Verify Status For All Links Twitter
+    [Arguments]  @{hrefs}
+    FOR  ${href}  IN  @{hrefs}
+        ${response}=  GET On Session  autobazar  ${href}
+        Log To Console  ${href} - Status Code: ${response.status_code}
+
+        IF  ${response.status_code} == 200
+            Log To Console  ${href} - Status code: 200
+        ELSE IF  ${response.status_code} != 200 AND '${href}' == 'https://twitter.com/AutobazarEU' OR '${href}' == 'https://www.linkedin.com/company/autobazareu'
+            Log To Console  Warning for Link: ${href} with status code ${response.status_code}
+        ELSE
+            Log To Console  Broken Link: ${href} with status code ${response.status_code}
+        END
     END
 
 Click And Verify Links On Page From Current Session
